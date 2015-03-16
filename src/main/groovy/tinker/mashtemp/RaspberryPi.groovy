@@ -1,0 +1,25 @@
+package tinker.mashtemp
+
+import com.pi4j.io.gpio.RaspiPin
+
+/**
+ * Raspberry Pi IO. Implemented by {@link FakeRaspberryPi} for web app development on PC.
+ */
+interface RaspberryPi {
+
+    /**
+     * List the ids of all installed w1 temp probes.
+     */
+    List<String> listTempProbes() throws IOException
+
+    /**
+     * Read the temperature of the probe.
+     */
+    double readTemp(String probeId) throws IOException
+
+    /**
+     * Change the state of the pin.
+     */
+    void setGpio(RaspiPin pin, int on) throws IOException;
+
+}
