@@ -15,7 +15,7 @@ ratpack {
 
     handlers { AppService appService ->
         get {
-            render groovyTemplate("index.html", cfg: appService.appConfig)
+            render groovyTemplate("layout.html", body: "index.html", cfg: appService.appConfig)
         }
 
         get("rest") {
