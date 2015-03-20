@@ -18,8 +18,18 @@ interface RaspberryPi {
     double readTemp(String probeId) throws IOException
 
     /**
+     * List the ids of all possible pins.
+     */
+    List<String> listPins() throws IOException;
+
+    /**
      * Change the state of the pin.
      */
-    void setGpio(RaspiPin pin, int on) throws IOException;
+    void setPin(String pinId, boolean on) throws IOException;
+
+    /**
+     * Read the state of the pin.
+     */
+    boolean getPin(String pinId) throws IOException;
 
 }

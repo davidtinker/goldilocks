@@ -10,4 +10,10 @@ class Vessel {
     /** Matches names of constants in {@link com.pi4j.io.gpio.RaspiPin} */
     String heaterPin
 
+    transient Double temp
+    transient String tempError
+
+    transient Boolean heaterOn
+    transient String heaterError
+
 }

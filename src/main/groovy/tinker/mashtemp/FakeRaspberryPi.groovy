@@ -1,7 +1,5 @@
 package tinker.mashtemp
 
-import com.pi4j.io.gpio.RaspiPin
-
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
@@ -10,8 +8,9 @@ import javax.annotation.PreDestroy
  */
 class FakeRaspberryPi implements RaspberryPi {
 
-    private static String HLT_PROBE = "28-00000657cb8b"
-    private static String MASH_PROBE = "28-00000657cbe6"
+    private static final String HLT_PROBE = "28-00000657cb8b"
+    private static final String MASH_PROBE = "28-00000657cbe6"
+    private static final String HEATER_PIN = "GPIO_17"
 
     private double hltTemp = 60.0
     private double mashTemp = 67.5
@@ -44,8 +43,19 @@ class FakeRaspberryPi implements RaspberryPi {
     }
 
     @Override
-    void setGpio(RaspiPin pin, int on) throws IOException {
-        if (pin == RaspiPin.GPIO_17) heaterOn = true
+    List<String> listPins() throws IOException {
+        return null
+    }
+
+    @Override
+    void setPin(String pinId, boolean on) throws IOException {
+        if (pinId == HEATER_PIN) heaterOn = on
+    }
+
+    @Override
+    boolean getPin(String pinId) throws IOException {
+        if (pinId == HEATER_PIN) return heaterOn
+        return false
     }
 
     private void updateState() {

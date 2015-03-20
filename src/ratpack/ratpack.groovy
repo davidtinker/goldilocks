@@ -1,4 +1,5 @@
-import tinker.mashtemp.AppService
+import tinker.mashtemp.App
+import tinker.mashtemp.JsonService
 import tinker.mashtemp.MashTempModule
 
 import static ratpack.groovy.Groovy.groovyTemplate
@@ -13,13 +14,15 @@ ratpack {
         add(MashTempModule)
     }
 
-    handlers { AppService appService ->
+    handlers { App app ->
         get {
-            render groovyTemplate("layout.html", body: "index.html", cfg: appService.appConfig)
+            render groovyTemplate("layout.html", body: "index.html", state: app.state)
         }
 
         get("rest") {
-            render "from the foo handler"
+            render()
+            def state = app.state
+            registry.get(JsonService).toJson(state)
         }
 
         assets("public")

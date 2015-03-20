@@ -9,11 +9,14 @@ class MashTempModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(Key.get(File, Names.named("config"))).toInstance(new File("mashtemp.json"))
+        File f = new File("/etc", "mashtemp.json")
+        if (!f.canWrite()) f = new File(System.getProperty("user.home"), "mashtemp.json")
+        bind(Key.get(File, Names.named("config"))).toInstance(f)
 
-        bind(AppConfigRepo).in(Scopes.SINGLETON)
-        bind(AppService).in(Scopes.SINGLETON)
-        bind(JsonService).in(Scopes.SINGLETON)
         bind(RaspberryPi).to(FakeRaspberryPi)
+
+        bind(App).in(Scopes.SINGLETON)
+        bind(AppConfigRepo).in(Scopes.SINGLETON)
+        bind(JsonService).in(Scopes.SINGLETON)
     }
 }
