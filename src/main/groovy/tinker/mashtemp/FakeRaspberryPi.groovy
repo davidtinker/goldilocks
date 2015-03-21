@@ -1,11 +1,14 @@
 package tinker.mashtemp
 
+import groovy.util.logging.Slf4j
+
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 /**
  * Simulates a Pi for testing on PC.
  */
+@Slf4j
 class FakeRaspberryPi implements RaspberryPi {
 
     private static final String HLT_PROBE = "28-00000657cb8b"

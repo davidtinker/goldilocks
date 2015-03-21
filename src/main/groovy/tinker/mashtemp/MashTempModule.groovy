@@ -17,6 +17,5 @@ class MashTempModule extends AbstractModule {
 
         bind(App).in(Scopes.SINGLETON)
         bind(AppConfigRepo).in(Scopes.SINGLETON)
-        bind(JsonService).in(Scopes.SINGLETON)
     }
 }

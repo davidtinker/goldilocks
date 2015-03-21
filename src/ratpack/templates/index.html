@@ -1,10 +1,14 @@
-<div class="row">
-    <div class="col-xs-12">
-        ${model.state.title ?: 'Mash Temp'}
-    </div>
+<h1>${model.state.title ?: 'Mash Temp'}</h1>
+
+<div class="vessels">
     <% model.state.vessels.each { v -> %>
-        <div class="col-xs-12">
-            ${v.name ?: 'Unnamed'}
-        </div>
+    <div class="vessel">
+        <h2>${v.name ?: 'Unnamed'}</h2>
+        <ul class="temps">
+            <li class="current">
+                ${v.temp}
+            </li>
+        </ul>
+    </div>
     <% } %>
 </div>

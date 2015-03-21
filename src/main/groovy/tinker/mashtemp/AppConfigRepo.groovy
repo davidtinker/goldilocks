@@ -1,5 +1,6 @@
 package tinker.mashtemp
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.inject.name.Named
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -15,30 +16,34 @@ import javax.inject.Inject
 class AppConfigRepo {
 
     private final File file
-    private final JsonService jsonService
+    private final ObjectMapper objectMapper
 
     @Inject
-    AppConfigRepo(@Named("config") File file, JsonService jsonService) {
+    AppConfigRepo(@Named("config") File file, ObjectMapper objectMapper) {
         this.file = file
-        this.jsonService = jsonService
+        this.objectMapper = objectMapper
         log.info("Loading configuration from " + file.absolutePath + (file.exists() ? "" : " (does not exist)"))
     }
 
     /**
      * Load configuration from our file. Returns new empty configuration if the file does not exist.
      */
-    AppState load() {
+    synchronized AppState load() {
         if (!file.exists()) return new AppState()
-        return jsonService.fromJson(file.text, AppState)
+        return objectMapper.readValue(file, AppState)
     }
 
     /**
      * Load the configuration and pass it to the closure. Any changes made are saved when the closure finishes.
      */
-    synchronized void update(Closure<AppState> c) {
+    synchronized void update(Closure c) {
         def cfg = load()
         c(cfg)
-        file.text = jsonService.toJson(c)
+        File n = new File(file.absolutePath + ".new")
+        if (n.exists() && !n.delete()) throw new IOException("Unable to delete [${n}]")
+        objectMapper.writeValue(n, cfg)
+        file.renameTo(new File(file.absolutePath + ".bak"))
+        n.renameTo(file)
     }
 
 }

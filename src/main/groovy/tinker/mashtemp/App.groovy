@@ -25,7 +25,7 @@ class App {
 
     private ScheduledExecutorService pool = Executors.newScheduledThreadPool(8)
 
-    private Runnable updateState = {
+    private Runnable updateTask = {
         try {
             state = refreshState()
         } catch (Exception x) {
@@ -38,7 +38,7 @@ class App {
         this.repo = repo
         this.pi = pi
         state = repo.load()
-        pool.scheduleAtFixedRate(updateState, 0, 10, TimeUnit.SECONDS)
+        pool.scheduleAtFixedRate(updateTask, 0, 10, TimeUnit.SECONDS)
     }
 
     @PreDestroy
@@ -53,10 +53,21 @@ class App {
         return state
     }
 
-    private AppState refreshState() throws IOException {
+    void updateVessel(Map<String, Object> map, String id) {
+        repo.update { AppState s ->
+            Vessel v = s.vessels.find { it.id == id }
+            if (!v) throw new IllegalArgumentException("Vessel not found for id [${id}]")
+            if (map.name) v.name = map.name
+            if (map.heater) v.heater = map.heater
+            if (map.targetTemp) v.targetTemp = map.targetTemp as Double
+        }
+        refreshState()
+    }
+
+    private synchronized AppState refreshState() throws IOException {
         def state = repo.load()
         List<Callable> jobs = []
-        for (Vessel v : state.vessels) {
+        state.vessels.each { v ->
             if (v.tempProbeId) jobs << {
                 try {
                     v.temp = pi.readTemp(v.tempProbeId)
@@ -67,7 +78,7 @@ class App {
             }
             if (v.heaterPin) jobs << {
                 try {
-                    v.heaterOn = pi.getPin(v.heaterPin)
+                    pi.setPin(v.heaterPin, v.heater == "on")
                 } catch (Exception x) {
                     v.heaterError = x.toString()
                     log.error(x.toString(), x)
