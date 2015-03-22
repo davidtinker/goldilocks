@@ -1,8 +1,8 @@
 package tinker.mashtemp
 
+import com.pi4j.io.gpio.RaspiPin
 import groovy.util.logging.Slf4j
 
-import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 /**
@@ -22,10 +22,7 @@ class FakeRaspberryPi implements RaspberryPi {
     private Timer timer
 
     FakeRaspberryPi() {
-    }
-
-    @PostConstruct
-    private void init() {
+        timer = new Timer("fake-pi", true)
         timer.schedule(new TimerTask() {
             void run() { updateState() }
         }, 1000, 30000)
@@ -33,6 +30,7 @@ class FakeRaspberryPi implements RaspberryPi {
 
     @PreDestroy
     private void destroy() {
+        timer.cancel()
     }
 
     List<String> listTempProbes() throws IOException {
@@ -47,7 +45,7 @@ class FakeRaspberryPi implements RaspberryPi {
 
     @Override
     List<String> listPins() throws IOException {
-        return null
+        return (0..20).collect { "GPIO_" + String.format("%02d", it) }
     }
 
     @Override

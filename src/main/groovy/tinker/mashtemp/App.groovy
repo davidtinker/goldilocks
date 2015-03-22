@@ -27,7 +27,7 @@ class App {
 
     private Runnable updateTask = {
         try {
-            state = refreshState()
+            refreshState()
         } catch (Exception x) {
             log.error(x.toString(), x)
         }
@@ -53,13 +53,15 @@ class App {
         return state
     }
 
-    void updateVessel(Map<String, Object> map, String id) {
+    synchronized void updateVessel(Map<String, Object> map, String id) {
         repo.update { AppState s ->
             Vessel v = s.vessels.find { it.id == id }
             if (!v) throw new IllegalArgumentException("Vessel not found for id [${id}]")
             if (map.name) v.name = map.name
-            if (map.heater) v.heater = map.heater
+            if (map.tempProbe != null) v.tempProbe = map.tempProbe ?: null
+            if (map.heaterPin != null) v.heaterPin = map.heaterPin ?: null
             if (map.targetTemp) v.targetTemp = map.targetTemp as Double
+            if (map.heater) v.heater = map.heater
         }
         refreshState()
     }
@@ -68,9 +70,9 @@ class App {
         def state = repo.load()
         List<Callable> jobs = []
         state.vessels.each { v ->
-            if (v.tempProbeId) jobs << {
+            if (v.tempProbe) jobs << {
                 try {
-                    v.temp = pi.readTemp(v.tempProbeId)
+                    v.temp = pi.readTemp(v.tempProbe)
                 } catch (Exception x) {
                     v.tempError = x.toString()
                     log.error(x.toString(), x)
@@ -87,6 +89,6 @@ class App {
         }
         if (jobs) pool.invokeAll(jobs)
         state.updated = new Date()
-        return state
+        return this.state = state
     }
 }

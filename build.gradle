@@ -4,10 +4,12 @@ buildscript {
     }
     dependencies {
         classpath "io.ratpack:ratpack-gradle:0.9.14"
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.0.2'
     }
 }
 
 apply plugin: "io.ratpack.ratpack-groovy"
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: "idea"
 
 repositories {
@@ -21,4 +23,8 @@ dependencies {
     runtime "org.slf4j:slf4j-simple:1.7.5"
     compile "com.pi4j:pi4j-core:0.0.5"
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
+}
+
+run {
+//    debug true
 }
