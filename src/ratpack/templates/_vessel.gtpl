@@ -31,6 +31,10 @@ form(class: 'edit', method: 'post', action: '/vessel/' + v.id, style: 'display:n
     input(type: 'submit', value: 'Save')
 }
 
+div(class: 'temp-chart') {
+    layout('_tempchart.gtpl', v: v)
+}
+
 ul(class: 'temps') {
     li(class: 'current') {
         label('Current')

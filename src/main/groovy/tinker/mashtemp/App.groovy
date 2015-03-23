@@ -91,6 +91,8 @@ class App {
                 }
             }
             if (v.heaterPin) jobs << {
+                double t = v.heater == "auto" && v.targetTemp ? v.targetTemp : 0.0
+                tempLogRepo.save("target-" + v.heaterPin, t)
                 try {
                     pi.setPin(v.heaterPin, v.heater == "on")
                 } catch (Exception x) {

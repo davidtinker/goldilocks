@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat
 
 /**
  * Remembers temperature measurements over time. These are stored in fixed record length CSV files, one per day
- * in a directory named after the temp probe id. Uses the system default timezone.
+ * in a directory named after the traceId. Uses the system default timezone.
  */
 @CompileStatic
 @Slf4j
@@ -18,15 +18,15 @@ class TempLogRepo {
 
     private final File dataDir
 
-    private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd")
+    private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyyMMdd")
     private static final SimpleDateFormat TIME_FMT = new SimpleDateFormat("HH:mm:ss") // must change list() as well
     private static final DecimalFormat TEMP_FMT = new DecimalFormat("000.000")
 
     static class Record {
-        Date date
+        long date
         double temp
 
-        Record(Date date, double temp) {
+        Record(long date, double temp) {
             this.date = date
             this.temp = temp
         }
@@ -47,23 +47,23 @@ class TempLogRepo {
     /**
      * Record temperature for the probe.
      */
-    synchronized void save(String tempProbe, double temp) throws IOException {
+    synchronized void save(String traceId, double temp) throws IOException {
         Date now = new Date()
-        File f = new File(ensureDir(tempProbe), DATE_FMT.format(now) + ".csv")
+        File f = new File(ensureDir(traceId), DATE_FMT.format(now) + ".csv")
         f.append(TIME_FMT.format(now) + "," + TEMP_FMT.format(temp) + "\n", "UTF8")
     }
 
     /**
      * List recorded measurements for the probe and date range,
      */
-    List<Record> list(String tempProbe, Date start, Date end) {
+    List<Record> list(String traceId, Date start, Date end) {
         List<Record> ans = []
         GregorianCalendar gc = new GregorianCalendar()
         gc.time = start
         while (true) {
             def d = gc.time
             if (!d.before(end)) break
-            File f = new File(new File(dataDir, tempProbe), DATE_FMT.format(d) + ".csv")
+            File f = new File(new File(dataDir, traceId), DATE_FMT.format(d) + ".csv")
             if (f.exists()) {
                 for (String line : f.readLines("UTF8")) {
                     // HH:mm:ss,000.000
@@ -74,7 +74,7 @@ class TempLogRepo {
                     def date = gc.time
                     if (date.before(start)) continue
                     if (date.after(end)) break
-                    ans << new Record(date, Double.parseDouble(line.substring(9)))
+                    ans << new Record(date.time, Double.parseDouble(line.substring(9)))
                 }
             }
             gc.add(Calendar.DAY_OF_YEAR, 1)

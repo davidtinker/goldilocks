@@ -8,6 +8,7 @@ import tinker.mashtemp.MashTempModule
 import ratpack.groovy.template.MarkupTemplateModule
 import ratpack.jackson.JacksonModule
 import tinker.mashtemp.RaspberryPi
+import tinker.mashtemp.TempLogRepo
 
 import static ratpack.groovy.Groovy.groovyMarkupTemplate
 import static ratpack.groovy.Groovy.ratpack
@@ -36,8 +37,24 @@ ratpack {
             render groovyMarkupTemplate("index.gtpl", app: app.state, tempProbes: pi.listTempProbes(), pins: pi.listPins())
         }
 
-        get("rest") {
-            render(json(app.state))
+        prefix("rest") {
+            get {
+                render(json(app.state))
+            }
+
+            get("vessels/:id/history") {
+                def vid = Integer.parseInt(pathTokens['id'])
+                def v = app.state.vessels.find { it.id == vid }
+                def tr = registry.get(TempLogRepo)
+                def ans = [:]
+                GregorianCalendar gc = new GregorianCalendar()
+                gc.add(Calendar.HOUR_OF_DAY, -2)
+                def ago = gc.time
+                def now = new Date()
+                if (v.tempProbe) ans.tempProbe = tr.list(v.tempProbe, ago, now)
+                if (v.heaterPin) ans.targetTemp = tr.list("target-" + v.heaterPin, ago, now)
+                render(json(ans))
+            }
         }
 
         post("vessel") {
