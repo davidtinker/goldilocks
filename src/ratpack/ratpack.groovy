@@ -40,8 +40,13 @@ ratpack {
             render(json(app.state))
         }
 
+        post("vessel") {
+            app.addVessel()
+            redirect('/')
+        }
+
         post("vessel/:id") {
-            app.updateVessel(parse(Form), pathTokens['id'])
+            app.updateVessel(parse(Form), pathTokens['id'] as Integer)
             redirect('/')
         }
 

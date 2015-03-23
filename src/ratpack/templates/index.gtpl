@@ -19,8 +19,14 @@ html {
             }
         }
 
+        if (!app.vessels) {
+            div('No vessels found. Click "Add Vessel" to add a hot liquor tank or mash tun to get started.')
+        }
+
         div(class: 'actions') {
-            a(class: "setup", href: "/setup", 'Add Vessel')
+            form(method: 'post', action: '/vessel') {
+                input(type: 'submit', value: 'Add Vessel')
+            }
         }
 
         script(src: '/js/jquery-1.11.2.js', type: "text/javascript") { }

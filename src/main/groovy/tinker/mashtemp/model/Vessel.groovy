@@ -5,7 +5,7 @@ package tinker.mashtemp.model
  */
 class Vessel {
 
-    String id
+    int id
     String name
     String tempProbe
     /** Matches names of constants in {@link com.pi4j.io.gpio.RaspiPin} */

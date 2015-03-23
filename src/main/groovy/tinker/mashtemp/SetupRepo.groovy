@@ -13,17 +13,20 @@ import javax.inject.Inject
  */
 @CompileStatic
 @Slf4j
-class AppConfigRepo {
+class SetupRepo {
 
+    private final File dataDir
     private final File file
     private final ObjectMapper objectMapper
 
     @Inject
-    AppConfigRepo(@Named("config") File file, ObjectMapper objectMapper) {
-        this.file = file
+    SetupRepo(@Named("data.dir") File dataDir, ObjectMapper objectMapper) {
+        this.dataDir = dataDir
+        this.file = new File(dataDir, "setup.json")
         this.objectMapper = objectMapper
-        log.info("Loading configuration from " + file.absolutePath + (file.exists() ? "" : " (does not exist)"))
     }
+
+    File getDataDir() { return dataDir }
 
     /**
      * Load configuration from our file. Returns new empty configuration if the file does not exist.

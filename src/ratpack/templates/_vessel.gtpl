@@ -49,7 +49,7 @@ ul(class: 'temps') {
                         def args = [type: 'radio', name: 'heater', value: option]
                         if (v.heater == option || option == 'off' && !v.heater) args.checked = null
                         input(args)
-                        span option.capitalize()
+                        span(option.capitalize())
                     }
                 }
                 input(type: 'submit', value: 'Go')

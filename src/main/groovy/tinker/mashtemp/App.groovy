@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit
 @Slf4j
 class App {
 
-    private final AppConfigRepo repo
+    private final SetupRepo setupRepo
+    private final TempLogRepo tempLogRepo
     private final RaspberryPi pi
 
     private volatile AppState state
@@ -34,10 +35,11 @@ class App {
     }
 
     @Inject
-    App(AppConfigRepo repo, RaspberryPi pi) {
-        this.repo = repo
+    App(SetupRepo setupRepo, TempLogRepo tempLogRepo, RaspberryPi pi) {
+        this.setupRepo = setupRepo
+        this.tempLogRepo = tempLogRepo
         this.pi = pi
-        state = repo.load()
+        state = setupRepo.load()
         pool.scheduleAtFixedRate(updateTask, 0, 10, TimeUnit.SECONDS)
     }
 
@@ -53,8 +55,17 @@ class App {
         return state
     }
 
-    synchronized void updateVessel(Map<String, Object> map, String id) {
-        repo.update { AppState s ->
+    synchronized void addVessel() {
+        setupRepo.update { AppState s ->
+            int max = 0
+            s.vessels.each { if (it.id > max) max = it.id }
+            s.vessels << new Vessel(id: max + 1)
+        }
+        refreshState()
+    }
+
+    synchronized void updateVessel(Map<String, Object> map, Integer id) {
+        setupRepo.update { AppState s ->
             Vessel v = s.vessels.find { it.id == id }
             if (!v) throw new IllegalArgumentException("Vessel not found for id [${id}]")
             if (map.name) v.name = map.name
@@ -67,12 +78,13 @@ class App {
     }
 
     private synchronized AppState refreshState() throws IOException {
-        def state = repo.load()
+        def state = setupRepo.load()
         List<Callable> jobs = []
         state.vessels.each { v ->
             if (v.tempProbe) jobs << {
                 try {
                     v.temp = pi.readTemp(v.tempProbe)
+                    tempLogRepo.save(v.tempProbe, v.temp)
                 } catch (Exception x) {
                     v.tempError = x.toString()
                     log.error(x.toString(), x)
