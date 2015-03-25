@@ -5,6 +5,7 @@ html {
         meta(charset: 'utf-8')
         meta(name: 'viewport', content: 'width=device-width, initial-scale=1')
         title(app.title ?: 'Goldilocks')
+        link(href: '/css/icons.css', rel: 'stylesheet')
         link(href: '/css/app.css', rel: 'stylesheet')
     }
     body {

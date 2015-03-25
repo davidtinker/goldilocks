@@ -1,6 +1,6 @@
 h2 {
     span(v.name ?: 'New Vessel')
-    a(class: 'edit', href: '', 'Edit')
+    a(class: 'edit', href: '', 'Edit') { span(class: "glyphicon glyphicon-cog") }
 }
 
 form(class: 'edit', method: 'post', action: '/vessel/' + v.id, style: 'display:none') {
@@ -31,9 +31,7 @@ form(class: 'edit', method: 'post', action: '/vessel/' + v.id, style: 'display:n
     input(type: 'submit', value: 'Save')
 }
 
-div(class: 'temp-chart', "attr-id": v.id) {
-    layout('_tempchart.gtpl', v: v)
-}
+div(class: 'temp-chart', "attr-id": v.id) { }
 
 ul(class: 'temps') {
     li(class: 'current') {
