@@ -31,7 +31,7 @@ form(class: 'edit', method: 'post', action: '/vessel/' + v.id, style: 'display:n
     input(type: 'submit', value: 'Save')
 }
 
-div(class: 'temp-chart') {
+div(class: 'temp-chart', "attr-id": v.id) {
     layout('_tempchart.gtpl', v: v)
 }
 

@@ -42,7 +42,7 @@ ratpack {
                 render(json(app.state))
             }
 
-            get("vessels/:id/history") {
+            get("vessel/:id/history") {
                 def vid = Integer.parseInt(pathTokens['id'])
                 def v = app.state.vessels.find { it.id == vid }
                 def tr = registry.get(TempLogRepo)

@@ -1,3 +1,32 @@
+body {
+    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+}
+
 .target input[type='number'] {
     width: 5em;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.x.axis path {
+    display: none;
+}
+
+.line {
+    fill: none;
+    stroke-width: 2px;
+}
+
+.line.temp-probe {
+    stroke: steelblue;
+}
+
+.line.target-temp {
+    stroke: #cc0000;
 }
