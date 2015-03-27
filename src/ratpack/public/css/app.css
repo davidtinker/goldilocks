@@ -1,49 +1,37 @@
 body {
-    font-family: "Lucida Grande",verdana,arial,helvetica,sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 12px;
-    background: #fdf6e3;
-    color: #b58900;
+    font-weight: lighter;
+    background: #161616;
+    color: #bbbfc2;
 }
 
-.base03  { color: #002b36 }
-.base02  { color: #073642 }
-.base01  { color: #586e75 }
-.base00  { color: #657b83 }
-.base0   { color: #839496 }
-.base1   { color: #93a1a1 }
-.base2   { color: #eee8d5 }
-.base3   { color: #fdf6e3 }
-
-.yellow  { color: #b58900 }
-.orange  { color: #cb4b16 }
-.red     { color: #dc322f }
-.magenta { color: #d33682 }
-.violet  { color: #6c71c4 }
-.blue    { color: #268bd2 }
-.cyan    { color: #2aa198 }
-.green   { color: #859900 }
+h1 {
+    font-size: 150%;
+}
 
 .vessel {
     width: 320px;
-    border: 1px solid #b58900;
-    -webkit-box-shadow: 3px 3px 5px 0 rgba(0,0,0,0.25);
-    -moz-box-shadow: 3px 3px 5px 0 rgba(0,0,0,0.25);
-    box-shadow: 3px 3px 5px 0 rgba(0,0,0,0.25);
+    background-color: #1f1f1f;
     margin-bottom: 10px;
 }
 
 .vessel h2 {
-    /*font-family: Futura, "Trebuchet MS", Arial, sans-serif;*/
+    font-size: 109%;
+    line-height: 120%;
     font-weight: normal;
     margin: 0;
-    padding-left: 4px;
-    background-color: #b58900;
-    color: #eee8d5;
+    padding-top: 0.5em;
+    text-align: center;
+    cursor: pointer;
 }
 
-.vessel h2 a {
-    color: #eee8d5;
+span.temp-probe {
+    color: #ed8445;
+    font-weight: bold;
     float: right;
+    padding-right: 2em;
+    font-size: 120%;
 }
 
 .target input[type='number'] {
@@ -51,14 +39,19 @@ body {
 }
 
 text {
-    fill: #839496;
+    fill: #bbbfc2;
+    font-size: 12px;
 }
 
 .axis path,
 .axis line {
     fill: none;
-    stroke: #eee8d5;
+    stroke: #444444;
     shape-rendering: crispEdges;
+}
+
+.domain {
+    display: none;
 }
 
 .x.axis path {
@@ -71,9 +64,9 @@ text {
 }
 
 .line.temp-probe {
-    stroke: steelblue;
+    stroke: #ed8445;
 }
 
 .line.target-temp {
-    stroke: #cc0000;
+    stroke: #e04e47;
 }

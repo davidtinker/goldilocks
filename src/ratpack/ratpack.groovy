@@ -2,13 +2,13 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.SerializationFeature
 import groovy.text.markup.TemplateConfiguration
 import ratpack.form.Form
-import tinker.mashtemp.App
-import tinker.mashtemp.MashTempModule
+import tinker.goldilocks.App
+import tinker.goldilocks.MashTempModule
 
 import ratpack.groovy.template.MarkupTemplateModule
 import ratpack.jackson.JacksonModule
-import tinker.mashtemp.RaspberryPi
-import tinker.mashtemp.TempLogRepo
+import tinker.goldilocks.RaspberryPi
+import tinker.goldilocks.TempLogRepo
 
 import static ratpack.groovy.Groovy.groovyMarkupTemplate
 import static ratpack.groovy.Groovy.ratpack

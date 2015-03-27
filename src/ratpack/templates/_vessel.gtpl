@@ -1,9 +1,8 @@
-def tf = new java.text.DecimalFormat("0.00")
+def tf = new java.text.DecimalFormat("0.00 " + app.tempUnit)
 
-h2 {
+h2(title: 'Click to edit') {
     span(v.name ?: 'New Vessel')
-    span(class: v.tempError ? 'temp error' : 'temp', v.temp != null ? tf.format(v.temp) : '?')
-    a(class: 'edit', href: '', 'Edit') { span(class: "glyphicon glyphicon-cog") }
+    span(class: 'temp-probe' + (v.tempError ? ' error' : ''), v.temp != null ? tf.format(v.temp) : '?')
 }
 
 form(class: 'edit', method: 'post', action: '/vessel/' + v.id, style: 'display:none') {

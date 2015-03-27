@@ -10,13 +10,13 @@ html {
     }
     body {
 
-        h1(app.title ?: 'Goldilocks')
+        h1('Goldilocks ' + (app.title ?: ''))
 
         div(class: 'time', new SimpleDateFormat('HH:mm:ss').format(new Date()))
 
         app.vessels.each { v ->
             div(id: "v" + v.id, class: 'vessel') {
-                layout('_vessel.gtpl', v: v, tempProbes: tempProbes, pins: pins)
+                layout('_vessel.gtpl', v: v, tempProbes: tempProbes, pins: pins, app: app)
             }
         }
 

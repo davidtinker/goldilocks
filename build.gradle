@@ -26,5 +26,5 @@ dependencies {
 }
 
 run {
-    debug true
+//    debug true
 }
