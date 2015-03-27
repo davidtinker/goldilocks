@@ -18,4 +18,11 @@ class Vessel {
     transient String tempError
     transient String heaterError
 
+    void convertToF() {
+        if (temp != null) temp = tof(temp)
+        if (targetTemp != null) targetTemp = tof(temp)
+    }
+
+    private double tof(double c) { c * 9 / 5 + 32 }
+
 }

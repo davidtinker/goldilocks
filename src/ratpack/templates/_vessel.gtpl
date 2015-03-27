@@ -1,5 +1,8 @@
+def tf = new java.text.DecimalFormat("0.00")
+
 h2 {
     span(v.name ?: 'New Vessel')
+    span(class: v.tempError ? 'temp error' : 'temp', v.temp != null ? tf.format(v.temp) : '?')
     a(class: 'edit', href: '', 'Edit') { span(class: "glyphicon glyphicon-cog") }
 }
 

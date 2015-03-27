@@ -9,6 +9,16 @@ class AppState {
     String title
     List<Vessel> vessels = []
 
+    String tempUnit = "C"   // or F
+
     transient Date updated
+
+    /**
+     * Convert temps from C to tempUnit.
+     */
+    void toTempUnit() {
+        if (tempUnit == 'F') {
+        }
+    }
 
 }

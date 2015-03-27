@@ -1,5 +1,5 @@
 body {
-    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
+    font-family: "Lucida Grande",verdana,arial,helvetica,sans-serif;
     font-size: 12px;
     background: #fdf6e3;
     color: #b58900;
@@ -26,14 +26,24 @@ body {
 .vessel {
     width: 320px;
     border: 1px solid #b58900;
-    border-radius: 4px;
+    -webkit-box-shadow: 3px 3px 5px 0 rgba(0,0,0,0.25);
+    -moz-box-shadow: 3px 3px 5px 0 rgba(0,0,0,0.25);
+    box-shadow: 3px 3px 5px 0 rgba(0,0,0,0.25);
+    margin-bottom: 10px;
 }
 
 .vessel h2 {
-    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    /*font-family: Futura, "Trebuchet MS", Arial, sans-serif;*/
+    font-weight: normal;
     margin: 0;
+    padding-left: 4px;
     background-color: #b58900;
     color: #eee8d5;
+}
+
+.vessel h2 a {
+    color: #eee8d5;
+    float: right;
 }
 
 .target input[type='number'] {
