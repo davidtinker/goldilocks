@@ -11,26 +11,26 @@ h1 {
     line-height: 120%;
 }
 
-.col form {
+.col form.vert {
     margin-left: 1em;
     margin-right: 1em;
     margin-top: 1em;
 }
 
-form label,
-form .actions {
+form.vert label,
+form.vert .actions {
     display: table-row;
 }
 
-form label span:first-child,
-form .actions span:first-child {
+form.vert label span:first-child,
+form.vert .actions span:first-child {
     display: table-cell;
     text-align: right;
     padding-right: 0.2em;
 }
 
-form label > input,
-form .actions > span {
+form.vert label > input,
+form.vert .actions > span {
     display: table-cell;
 }
 
@@ -93,8 +93,25 @@ span.temp-probe {
     color: #72d0df;
 }
 
-.target input[type='number'] {
-    width: 5em;
+form.heater {
+    margin: 0;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 0.5em;
+    text-align: center;
+}
+
+input.target-temp {
+    background: #161616;
+    color: #e04e47;
+    border: 1px solid #222;
+    font-weight: bold;
+    font-size: 120%;
+    width: 4em;
+}
+
+.vessel.blue input.target-temp {
+    color: #7fb170;
 }
 
 text {

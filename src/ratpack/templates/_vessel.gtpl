@@ -9,7 +9,7 @@ if (!v.name || !v.tempProbe) {
     div(class: 'hint', '(click the title bar to configure this vessel)')
 }
 
-form(class: 'edit', method: 'post', action: '/vessel/' + v.id, style: 'display:none') {
+form(class: 'edit vert', method: 'post', action: '/vessel/' + v.id, style: 'display:none') {
     label {
         span('Name')
         input(name: 'name', value: v.name)
@@ -61,24 +61,21 @@ form(class: 'edit', method: 'post', action: '/vessel/' + v.id, style: 'display:n
 
 div(class: 'temp-chart', "attr-id": v.id) { }
 
-ul(class: 'temps') {
-    if (v.heaterPin) {
-        form(method: 'post', action: '/vessel/' + v.id) {
-            li(class: 'target') {
-                label('Target')
-                span(v.targetTemp)
-                input(type: 'number', name: 'targetTemp', value: v.targetTemp)
-                label('Heater')
-                ['off', 'auto', 'on'].each { option ->
-                    label {
-                        def args = [type: 'radio', name: 'heater', value: option]
-                        if (v.heater == option || option == 'off' && !v.heater) args.checked = null
-                        input(args)
-                        span(option.capitalize())
-                    }
-                }
-                input(type: 'submit', value: 'Go')
+if (v.heaterPin) {
+    form(class: 'heater', method: 'post', action: '/vessel/' + v.id) {
+        label('Heater')
+        ['off', 'on', 'auto'].each { option ->
+            label {
+                def args = [type: 'radio', name: 'heater', value: option]
+                if (v.heater == option || option == 'off' && !v.heater) args.checked = null
+                input(args)
+                span(option.capitalize())
             }
         }
+        label {
+            span('target ')
+            input(type: 'number', class: 'target-temp', name: 'targetTemp', value: Html.TEMP_FMT.format(v.targetTemp))
+        }
+        input(type: 'submit', value: 'Go')
     }
 }

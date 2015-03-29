@@ -4,7 +4,7 @@ if (undefined === window['App']) window.App = {};
 
     App.createTempChart = function(element, vesselId) {
 
-        var margin = {top: 10, right: 20, bottom: 30, left: 40},
+        var margin = {top: 10, right: 20, bottom: 20, left: 40},
             width = 320 - margin.left - margin.right,
             height = 200 - margin.top - margin.bottom;
 
