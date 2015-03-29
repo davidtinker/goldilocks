@@ -1,4 +1,4 @@
-import java.text.SimpleDateFormat
+import tinker.goldilocks.Html
 
 html {
     head {
@@ -10,29 +10,37 @@ html {
     }
     body {
 
-        h1('Goldilocks ' + (app.title ?: ''))
-
-        div(class: 'time', new SimpleDateFormat('HH:mm:ss').format(new Date()))
-
-        app.vessels.each { v ->
-            div(id: "v" + v.id, class: 'vessel') {
-                layout('_vessel.gtpl', v: v, tempProbes: tempProbes, pins: pins, app: app)
+        div(class: 'row') {
+            div(class: 'col title') {
+                h1(title: 'Click to edit settings') {
+                    span(class: 'brand', app.title ?: 'Goldilocks')
+                    span(class: 'time', id: 'time', Html.time(new Date()))
+                }
+                layout('_settings.gtpl', app: app)
             }
         }
 
-        if (!app.vessels) {
-            div('No vessels found. Click "Add Vessel" to add a hot liquor tank or mash tun to get started.')
-        }
+        div(class: 'row') {
+            app.vessels.each { v ->
+                div(id: "v" + v.id, class: 'col vessel' + (v.colorScheme ? ' ' + v.colorScheme : '')) {
+                    layout('_vessel.gtpl', v: v, tempProbes: tempProbes, pins: pins, app: app)
+                }
+            }
 
-        div(class: 'actions') {
-            form(method: 'post', action: '/vessel') {
-                input(type: 'submit', value: 'Add Vessel')
+            if (!app.vessels) {
+                div('No vessels found. Click "Add Vessel" to add a hot liquor tank or mash tun to get started.')
+            }
+
+            div(class: 'col main-actions') {
+                form(method: 'post', action: '/vessel') {
+                    input(type: 'submit', value: 'Add Vessel')
+                }
             }
         }
 
         script(src: '/js/jquery-1.11.2.js', type: "text/javascript") { }
         script(src: '/js/d3.js', type: "text/javascript") { }
-        script(src: '/js/app.js', type: "text/javascript") { }
         script(src: '/js/tempchart.js', type: "text/javascript") { }
+        script(src: '/js/app.js', type: "text/javascript") { }
     }
 }

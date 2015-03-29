@@ -7,23 +7,78 @@ body {
 }
 
 h1 {
-    font-size: 150%;
+    font-size: 109%;
+    line-height: 120%;
 }
 
-.vessel {
+.col form {
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: 1em;
+}
+
+form label,
+form .actions {
+    display: table-row;
+}
+
+form label span:first-child,
+form .actions span:first-child {
+    display: table-cell;
+    text-align: right;
+    padding-right: 0.2em;
+}
+
+form label > input,
+form .actions > span {
+    display: table-cell;
+}
+
+input.delete {
+    float: right;
+}
+
+.row {
+    clear: both;
+}
+
+.col {
     width: 320px;
-    background-color: #1f1f1f;
     margin-bottom: 10px;
 }
 
-.vessel h2 {
-    font-size: 109%;
-    line-height: 120%;
-    font-weight: normal;
+.title {
+    background-color: #1f1f1f;
+    position: relative;
+    cursor: pointer;
+}
+
+.brand {
+    padding-left: 1em;
+    color: #e9b746;
+}
+
+.time {
+    font-size: 120%;
+    font-weight: bold;
+    padding-right: 1em;
+    float: right;
+}
+
+.vessel {
+    background-color: #1f1f1f;
+}
+
+.vessel h1 {
     margin: 0;
     padding-top: 0.5em;
     text-align: center;
     cursor: pointer;
+}
+
+.vessel .hint {
+    text-align: center;
+    padding: 0.5em;
 }
 
 span.temp-probe {
@@ -32,6 +87,10 @@ span.temp-probe {
     float: right;
     padding-right: 2em;
     font-size: 120%;
+}
+
+.vessel.blue span.temp-probe {
+    color: #72d0df;
 }
 
 .target input[type='number'] {
@@ -69,4 +128,16 @@ text {
 
 .line.target-temp {
     stroke: #e04e47;
+}
+
+.vessel.blue .line.temp-probe {
+    stroke: #72d0df;
+}
+
+.vessel.blue .line.target-temp {
+    stroke: #7fb170;
+}
+
+.main-actions {
+    text-align: center;
 }

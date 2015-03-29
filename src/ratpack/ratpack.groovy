@@ -3,12 +3,14 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import groovy.text.markup.TemplateConfiguration
 import ratpack.form.Form
 import tinker.goldilocks.App
+import tinker.goldilocks.Html
 import tinker.goldilocks.MashTempModule
 
 import ratpack.groovy.template.MarkupTemplateModule
 import ratpack.jackson.JacksonModule
 import tinker.goldilocks.RaspberryPi
 import tinker.goldilocks.TempLogRepo
+import static tinker.goldilocks.Util.fixTemp
 
 import static ratpack.groovy.Groovy.groovyMarkupTemplate
 import static ratpack.groovy.Groovy.ratpack
@@ -37,6 +39,17 @@ ratpack {
             render groovyMarkupTemplate("index.gtpl", app: app.state, tempProbes: pi.listTempProbes(), pins: pi.listPins())
         }
 
+        get("refresh") {
+            def s = app.state
+            render(json([
+                    time: Html.time(new Date()),
+                    vessels: s.vessels.collect { v -> [
+                            id: v.id,
+                            temp: Html.temp(v.temp, s.fahrenheit)
+                    ] }
+            ]))
+        }
+
         prefix("rest") {
             get {
                 render(json(app.state))
@@ -51,10 +64,15 @@ ratpack {
                 gc.add(Calendar.HOUR_OF_DAY, -2)
                 def ago = gc.time
                 def now = new Date()
-                if (v.tempProbe) ans.tempProbe = tr.list(v.tempProbe, ago, now)
-                if (v.heaterPin) ans.targetTemp = tr.list("target-" + v.heaterPin, ago, now)
+                if (v.tempProbe) ans.tempProbe = tr.list(v.tempProbe, ago, now, app.state.fahrenheit)
+                if (v.heaterPin) ans.targetTemp = tr.list("target-" + v.heaterPin, ago, now, app.state.fahrenheit)
                 render(json(ans))
             }
+        }
+
+        post("settings") {
+            app.updateSettings(parse(Form))
+            redirect('/')
         }
 
         post("vessel") {
@@ -63,7 +81,10 @@ ratpack {
         }
 
         post("vessel/:id") {
-            app.updateVessel(parse(Form), pathTokens['id'] as Integer)
+            def f = parse(Form)
+            def id = pathTokens['id'] as Integer
+            if (f.action == 'Delete') app.deleteVessel(id)
+            else app.updateVessel(f, id)
             redirect('/')
         }
 
