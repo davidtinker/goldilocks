@@ -24,7 +24,7 @@ class Html {
         return  s + ' \u00B0' + (fahrenheit ? 'F' : 'C')
     }
 
-    private static SimpleDateFormat TIME_FMT = new SimpleDateFormat('HH:mm:ss')
+    private static SimpleDateFormat TIME_FMT = new SimpleDateFormat('h:mm:ss')
 
     static String time(Date date) {
         return TIME_FMT.format(date)

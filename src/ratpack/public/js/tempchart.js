@@ -8,13 +8,18 @@ if (undefined === window['App']) window.App = {};
             width = 320 - margin.left - margin.right,
             height = 200 - margin.top - margin.bottom;
 
+        var timeFormat = d3.time.format.multi([
+            ["%M", function(d) { return d.getMinutes(); }],
+            ["%I%p", function(d) { return true; }],
+        ]);
+
         var x = d3.time.scale().range([0, width]);
         var y = d3.scale.linear().range([height, 0]).nice();
-        var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(10).tickSize(-height);
+        var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(10).tickSize(-height).tickFormat(timeFormat);
         var yAxis = d3.svg.axis().scale(y).orient("left").tickSize(-width);
 
         var probeLine = d3.svg.line()
-            .interpolate("basis")
+            .interpolate("monotone")
             .x(function(d) { return x(d.date); })
             .y(function(d) { return y(d.temp); });
 
@@ -30,18 +35,28 @@ if (undefined === window['App']) window.App = {};
                     var tempProbe = data.tempProbe;
                     var targetTemp = data.targetTemp;
 
-                    x.domain(d3.extent(tempProbe, function (d) { return d.date; }));
+                    svg.selectAll(".axis").remove();
+                    svg.selectAll(".line").remove();
 
-                    var e = d3.extent(tempProbe, function (d) { return d.temp; });
-                    if (targetTemp) {
+                    if (tempProbe.length == 0) return;
+
+                    var e = d3.extent(tempProbe, function (d) { return d.date; });
+                    if (e[1] - e[0] < 30 * 60 * 1000) e[0] = e[1] - 30 * 60 * 1000;
+                    x.domain(e);
+
+                    e = d3.extent(tempProbe, function (d) { return d.temp; });
+                    if (targetTemp && targetTemp.length > 0) {
                         var e2 = d3.extent(targetTemp, function (d) { return d.temp; });
                         var min = d3.min(targetTemp, function (d) { return d.temp; });
                         if (min > 0.0) e[0] = Math.min(e[0], e2[0]);
                         e[1] = Math.max(e[1], d3.max(targetTemp, function (d) { return d.temp; }));
                     }
+                    if (e[1] - e[0] < 5) {
+                        var avg = (e[0] + e[1]) / 2;
+                        e[0] = avg - 2.5;
+                        e[1] = avg + 2.5;
+                    }
                     y.domain(e);
-
-                    svg.selectAll(".axis").remove();
 
                     svg.append("g")
                         .attr("class", "x axis")
@@ -52,9 +67,7 @@ if (undefined === window['App']) window.App = {};
                         .attr("class", "y axis")
                         .call(yAxis);
 
-                    svg.selectAll(".line").remove();
-
-                    if (targetTemp) {
+                    if (targetTemp && targetTemp.length > 0) {
                         var targetLine = d3.svg.line()
                             .interpolate("step-before")
                             .x(function (d) { return x(d.date) })
