@@ -21,7 +21,7 @@ class Html {
             if (fahrenheit) c = Util.toFahrenheit(c)
             s = TEMP_FMT.format(c)
         }
-        return  s + ' &deg;' + (fahrenheit ? 'F' : 'C')
+        return  s + ' \u00B0' + (fahrenheit ? 'F' : 'C')
     }
 
     private static SimpleDateFormat TIME_FMT = new SimpleDateFormat('HH:mm:ss')
