@@ -7,11 +7,13 @@ import tinker.goldilocks.Html
 import tinker.goldilocks.MashTempModule
 
 import ratpack.groovy.template.MarkupTemplateModule
+import ratpack.groovy.template.TextTemplateModule
 import ratpack.jackson.JacksonModule
 import tinker.goldilocks.RaspberryPi
 import tinker.goldilocks.TempLogRepo
 
 import static ratpack.groovy.Groovy.groovyMarkupTemplate
+import static ratpack.groovy.Groovy.groovyTemplate
 import static ratpack.groovy.Groovy.ratpack
 import static ratpack.jackson.Jackson.json
 
@@ -24,6 +26,7 @@ ratpack {
             c.autoNewLine = true
             c.autoIndent = true
         }
+        add(TextTemplateModule)
         add(MashTempModule)
         add(JacksonModule) { JacksonModule.Config c -> c.withMapper {
             it.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
@@ -34,8 +37,10 @@ ratpack {
 
     handlers { App app ->
         get {
-            def pi = registry.get(RaspberryPi)
-            render groovyMarkupTemplate("index.gtpl", app: app.state, tempProbes: pi.listTempProbes(), pins: pi.listPins())
+            render groovyTemplate("index.html", app: app.state)
+
+//            def pi = registry.get(RaspberryPi)
+//            render groovyMarkupTemplate("index.gtpl", app: app.state, tempProbes: pi.listTempProbes(), pins: pi.listPins())
         }
 
         get("refresh") {
@@ -57,6 +62,21 @@ ratpack {
                 render(json(app.state))
             }
 
+            prefix("charts") {
+                post {
+                    app.addChart()
+                    render(json(app.state))
+                }
+                prefix(":id") {
+                    prefix("items") {
+                        post {
+                            app.addItem(Integer.parseInt(pathTokens['id']))
+                            render(json(app.state))
+                        }
+                    }
+                }
+            }
+
             get("vessel/:id/history") {
                 def vid = Integer.parseInt(pathTokens['id'])
                 def v = app.state.charts.find { it.id == vid }
@@ -74,11 +94,6 @@ ratpack {
 
         post("settings") {
             app.updateSettings(parse(Form))
-            redirect('/')
-        }
-
-        post("chart") {
-            app.addChart()
             redirect('/')
         }
 

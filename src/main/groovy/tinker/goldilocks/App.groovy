@@ -54,6 +54,7 @@ class App {
      * Get the most recent state of the app with all temps etc filled in.
      */
     AppState getState() {
+        state.updated = new Date();
         return state
     }
 
