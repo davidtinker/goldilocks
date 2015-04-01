@@ -10,7 +10,6 @@ import ratpack.groovy.template.MarkupTemplateModule
 import ratpack.jackson.JacksonModule
 import tinker.goldilocks.RaspberryPi
 import tinker.goldilocks.TempLogRepo
-import static tinker.goldilocks.Util.fixTemp
 
 import static ratpack.groovy.Groovy.groovyMarkupTemplate
 import static ratpack.groovy.Groovy.ratpack
@@ -42,11 +41,14 @@ ratpack {
         get("refresh") {
             def s = app.state
             render(json([
-                    time: Html.time(new Date()),
-                    vessels: s.vessels.collect { v -> [
-                            id: v.id,
-                            temp: Html.temp(v.temp, s.fahrenheit)
+                time: Html.time(new Date()),
+                charts: s.charts.collect { c -> [
+                    id: c.id,
+                    items: c.items.collect { i -> [
+                        id: i.id,
+                        temp: Html.temp(i.temp, s.fahrenheit)
                     ] }
+                ] }
             ]))
         }
 
@@ -57,7 +59,7 @@ ratpack {
 
             get("vessel/:id/history") {
                 def vid = Integer.parseInt(pathTokens['id'])
-                def v = app.state.vessels.find { it.id == vid }
+                def v = app.state.charts.find { it.id == vid }
                 def tr = registry.get(TempLogRepo)
                 def ans = [:]
                 GregorianCalendar gc = new GregorianCalendar()
@@ -75,16 +77,22 @@ ratpack {
             redirect('/')
         }
 
-        post("vessel") {
-            app.addVessel()
+        post("chart") {
+            app.addChart()
             redirect('/')
         }
 
-        post("vessel/:id") {
+        post("chart/:chartId/item") {
+            app.addItem(pathTokens['chartId'] as Integer)
+            redirect('/')
+        }
+
+        post("chart/:chartId/item/:itemId") {
             def f = parse(Form)
-            def id = pathTokens['id'] as Integer
-            if (f.action == 'Delete') app.deleteVessel(id)
-            else app.updateVessel(f, id)
+            def chartId = pathTokens['chartId'] as Integer
+            def itemId = pathTokens['itemId'] as Integer
+            if (f.action == 'Delete') app.deleteItem(chartId, itemId)
+            else app.updateItem(f, chartId, itemId)
             redirect('/')
         }
 

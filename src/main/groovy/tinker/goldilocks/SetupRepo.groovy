@@ -47,7 +47,7 @@ class SetupRepo {
         objectMapper.writeValue(n, cfg)
         def bak = new File(file.absolutePath + ".bak")
         bak.delete()
-        if (!file.renameTo(bak)) throw new IOException("Unable to rename ${file} to ${bak}")
+        if (file.exists() && !file.renameTo(bak)) throw new IOException("Unable to rename ${file} to ${bak}")
         n.renameTo(file)
         bak.delete()
     }

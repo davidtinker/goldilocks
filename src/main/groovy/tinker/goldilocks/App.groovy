@@ -3,7 +3,7 @@ package tinker.goldilocks
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import tinker.goldilocks.model.AppState
-import tinker.goldilocks.model.Vessel
+import tinker.goldilocks.model.Item
 
 import javax.annotation.PreDestroy
 import javax.inject.Inject
@@ -65,35 +65,44 @@ class App {
         refreshState()
     }
 
-    synchronized void addVessel() {
+    synchronized void addChart() {
+        setupRepo.update { AppState s -> s.addChart() }
+        refreshState()
+    }
+
+    synchronized void deleteChart(Integer chartId) {
         setupRepo.update { AppState s ->
-            int max = 0
-            s.vessels.each { if (it.id > max) max = it.id }
-            s.vessels << new Vessel(id: max + 1)
+            def c = s.findChart(chartId)
+            if (c.items) throw new IllegalArgumentException("Chart ${chartId} still has items")
+            s.charts.remove(c)
         }
         refreshState()
     }
 
-    synchronized void updateVessel(Map<String, Object> map, Integer id) {
+    synchronized void addItem(Integer chartId) {
+        setupRepo.update { AppState s -> s.findChart(chartId).addItem() }
+        refreshState()
+    }
+
+    synchronized void updateItem(Map<String, Object> map, Integer chartId, Integer itemId) {
         setupRepo.update { AppState s ->
-            Vessel v = s.vessels.find { it.id == id }
-            if (!v) throw new IllegalArgumentException("Vessel not found for id [${id}]")
-            if (map.name) v.name = map.name
-            if (map.tempProbe != null) v.tempProbe = map.tempProbe ?: null
-            if (map.heaterPin != null) v.heaterPin = map.heaterPin ?: null
-            if (map.colorScheme != null) v.colorScheme = map.colorScheme ?: null
-            if (map.targetTemp) v.targetTemp = map.targetTemp as Double
-            if (map.heater) v.heater = map.heater
+            Item i = s.findChart(chartId).findItem(itemId);
+            if (map.name) i.name = map.name
+            if (map.tempProbe != null) i.tempProbe = map.tempProbe ?: null
+            if (map.pin != null) i.pin = map.pin ?: null
+            if (map.colorScheme != null) i.colorScheme = map.colorScheme ?: null
+            if (map.targetTemp) i.targetTemp = map.targetTemp as Double
+            if (map.pinState) i.pinState = map.pinState
         }
         refreshState()
     }
 
-    synchronized void deleteVessel(Integer id) {
+    synchronized void deleteItem(Integer chartId, Integer itemId) {
         setupRepo.update { AppState s ->
-            Vessel v = s.vessels.find { it.id == id }
-            if (!v) throw new IllegalArgumentException("Vessel not found for id [${id}]")
-            if (v.heaterPin) pi.setPin(v.heaterPin, false)
-            s.vessels.remove(v)
+            def c = s.findChart(chartId)
+            def i = c.findItem(itemId)
+            if (i.pin) pi.setPin(i.pin, false)
+            c.items.remove(i)
         }
         refreshState()
     }
@@ -101,27 +110,30 @@ class App {
     private synchronized AppState refreshState() throws IOException {
         def state = setupRepo.load()
         List<Callable> jobs = []
-        state.vessels.each { v ->
-            if (v.tempProbe) jobs << {
-                try {
-                    v.temp = pi.readTemp(v.tempProbe)
-                    tempLogRepo.save(v.tempProbe, v.temp)
-                } catch (Exception x) {
-                    v.tempError = x.toString()
-                    log.error(x.toString(), x)
+        state.charts.each { c ->
+            c.items.each { i ->
+                if (i.tempProbe) jobs << {
+                    try {
+                        i.temp = pi.readTemp(i.tempProbe)
+                        tempLogRepo.save(i.tempProbe, i.temp)
+                    } catch (Exception x) {
+                        i.errors << "Unable to read temp probe ${i.tempProbe}: " + x
+                        log.error(x.toString(), x)
+                    }
+                }
+                if (i.pin) jobs << {
+                    if (i.pinState == "auto") tempLogRepo.save("target-" + i.pin, i.targetTemp)
+                    try {
+                        pi.setPin(i.pin, i.pinState == "on")
+                    } catch (Exception x) {
+                        i.errors << "Unable to set heater pin ${i.pin} to ${i.pinState}: " + x
+                        log.error(x.toString(), x)
+                    }
                 }
             }
-            if (v.heaterPin) jobs << {
-                double t = v.heater == "auto" && v.targetTemp ? v.targetTemp : (Double)0.0
-                tempLogRepo.save("target-" + v.heaterPin, t)
-                try {
-                    pi.setPin(v.heaterPin, v.heater == "on")
-                } catch (Exception x) {
-                    v.heaterError = x.toString()
-                    log.error(x.toString(), x)
-                }
-            }
+
         }
+
         if (jobs) pool.invokeAll(jobs)
         state.updated = new Date()
         return this.state = state

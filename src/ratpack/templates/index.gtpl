@@ -21,19 +21,17 @@ html {
         }
 
         div(class: 'row') {
-            app.vessels.each { v ->
-                div(id: "v" + v.id, class: 'col vessel' + (v.colorScheme ? ' ' + v.colorScheme : '')) {
-                    layout('_vessel.gtpl', v: v, tempProbes: tempProbes, pins: pins, app: app)
-                }
+            app.charts.each { c ->
+                layout('_chart.gtpl', c: c, tempProbes: tempProbes, pins: pins, app: app)
             }
 
-            if (!app.vessels) {
-                div('No vessels found. Click "Add Vessel" to add a hot liquor tank or mash tun to get started.')
+            if (!app.charts) {
+                div('No charts found. Click "Add Chart" to add a chart to get started.')
             }
 
             div(class: 'col main-actions') {
-                form(method: 'post', action: '/vessel') {
-                    input(type: 'submit', value: 'Add Vessel')
+                form(method: 'post', action: '/chart') {
+                    input(type: 'submit', value: 'Add Chart')
                 }
             }
         }

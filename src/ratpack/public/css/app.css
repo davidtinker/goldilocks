@@ -43,8 +43,17 @@ input.delete {
 }
 
 .col {
-    width: 320px;
+    width: 640px;
     margin-bottom: 10px;
+}
+
+.chart {
+    display: table-row;
+}
+
+.graph,
+.items {
+    display: table-cell;
 }
 
 .title {

@@ -11,7 +11,7 @@ import tinker.goldilocks.TempLogRepo
 class AppState {
 
     String title
-    List<Vessel> vessels = []
+    List<Chart> charts = []
 
     boolean fahrenheit
 
@@ -24,6 +24,20 @@ class AppState {
     List<TempLogRepo.Record> fixTemp(List<TempLogRepo.Record> list) {
         if (fahrenheit) list.each { it.temp = fixTemp(it.temp) }
         return list
+    }
+
+    Chart findChart(Integer id) {
+        Chart c = charts.find { it.id == id }
+        if (!c) throw new IllegalArgumentException("Chart not found for id ${id}")
+        return c
+    }
+
+    Chart addChart() {
+        int max = 0
+        charts.each { if (it.id > max) max = it.id }
+        def ans = new Chart(id: max + 1)
+        charts << ans
+        return ans
     }
 
 }
