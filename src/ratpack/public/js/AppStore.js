@@ -17,15 +17,25 @@ function updateApp(data) {
     AppStore.emitChange();
 }
 
+function PUT(url, data) {
+    var args = { type: "PUT", url: url, contentType: "application/json"};
+    if (data) args.data = JSON.stringify(data);
+    return $.ajax(args);
+}
+
 AppDispatcher.register(function(action) {
 
     switch(action.type) {
         case 'refresh':
-            $.getJSON('/rest', function(data){ updateApp(data); });
+            $.getJSON('/rest', updateApp);
             break;
 
-        case 'addChart':
-            $.post('/rest/charts', function(data){ updateApp(data); });
+        case 'add-chart':
+            $.post('/rest/charts', updateApp);
+            break;
+
+        case 'update-settings':
+            PUT('/rest', action.data).success(updateApp);
             break;
     }
 });

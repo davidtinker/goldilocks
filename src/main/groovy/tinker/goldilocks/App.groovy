@@ -58,17 +58,17 @@ class App {
         return state
     }
 
-    synchronized void updateSettings(Map<String, Object> map) {
+    synchronized AppState updateSettings(AppState n) {
         setupRepo.update { AppState s ->
-            if (map.title != null) s.title = map.title
-            if (map.tempUnit != null) s.fahrenheit = map.tempUnit == "F"
+            if (n.title != null) s.title = n.title
+            if (n.fahrenheit != null) s.fahrenheit = n.fahrenheit
         }
-        refreshState()
+        return refreshState()
     }
 
-    synchronized void addChart() {
+    synchronized AppState addChart() {
         setupRepo.update { AppState s -> s.addChart() }
-        refreshState()
+        return refreshState()
     }
 
     synchronized void deleteChart(Integer chartId) {

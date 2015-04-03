@@ -11,11 +11,15 @@ import ratpack.groovy.template.TextTemplateModule
 import ratpack.jackson.JacksonModule
 import tinker.goldilocks.RaspberryPi
 import tinker.goldilocks.TempLogRepo
+import tinker.goldilocks.model.AppState
 
+import static ratpack.groovy.Groovy.context
 import static ratpack.groovy.Groovy.groovyMarkupTemplate
 import static ratpack.groovy.Groovy.groovyTemplate
 import static ratpack.groovy.Groovy.ratpack
+import static ratpack.jackson.Jackson.fromJson
 import static ratpack.jackson.Jackson.json
+import static ratpack.jackson.Jackson.jsonNode
 
 ratpack {
 
@@ -43,24 +47,15 @@ ratpack {
 //            render groovyMarkupTemplate("index.gtpl", app: app.state, tempProbes: pi.listTempProbes(), pins: pi.listPins())
         }
 
-        get("refresh") {
-            def s = app.state
-            render(json([
-                time: Html.time(new Date()),
-                charts: s.charts.collect { c -> [
-                    id: c.id,
-                    items: c.items.collect { i -> [
-                        id: i.id,
-                        temp: Html.temp(i.temp, s.fahrenheit)
-                    ] }
-                ] }
-            ]))
-        }
-
         prefix("rest") {
-            get {
-                render(json(app.state))
+
+            handler("") {
+                context.byMethod {
+                    get { render(json(app.state)) }
+                    put { render(json(app.updateSettings(context.parse(fromJson(AppState))))) }
+                }
             }
+
 
             prefix("charts") {
                 post {

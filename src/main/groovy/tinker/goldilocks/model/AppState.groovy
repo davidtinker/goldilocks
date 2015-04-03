@@ -13,7 +13,7 @@ class AppState {
     String title
     List<Chart> charts = []
 
-    boolean fahrenheit
+    Boolean fahrenheit
 
     transient Date updated
 
