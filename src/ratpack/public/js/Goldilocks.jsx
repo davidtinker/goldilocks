@@ -1,6 +1,9 @@
 var React = require('react');
 var $ = require('jquery');
 
+var AppDispatcher = require('./AppDispatcher');
+var AppStore = require('./AppStore');
+
 var TitleBar = require('./TitleBar.jsx');
 var Chart = require('./Chart.jsx');
 
@@ -9,22 +12,18 @@ var Goldilocks = React.createClass({
         return {title: '', charts: []};
     },
 
-    refreshState: function(){
-        $.getJSON('/rest', function(app){
-            this.setState(app);
-        }.bind(this));
-    },
-
     componentDidMount: function() {
-        this.refreshState();
-        setInterval(this.refreshState, 1000);
+        AppStore.addChangeListener(function(){
+            this.setState(AppStore.getApp());
+        }.bind(this));
+        var f = function() { AppDispatcher.dispatch({type: 'refresh'}) };
+        f();
+        setInterval(f, 1000);
     },
 
     handleAddChart: function(ev) {
         ev.preventDefault();
-        $.post('/rest/charts', function(app){
-            this.setState(app);
-        }.bind(this));
+        AppDispatcher.dispatch({type: 'addChart'});
     },
 
     render: function() {
