@@ -6,12 +6,13 @@ var Item = require('./Item.jsx');
 var Chart = React.createClass({
 
     render: function() {
-        var itemNodes = this.props.data.items.map(function(item) {
-            return ( <Item data={item} key={item.id}/> )
+        var chart = this.props.chart;
+        var itemNodes = chart.items.map(function(item) {
+            return ( <Item item={item} chart={chart} key={item.id}/> )
         });
         return (
-            <div className="chart" attr-id={this.props.data.id}>
-                <h2>chart {this.props.data.id}</h2>
+            <div className="chart">
+                <h2>chart {chart.id}</h2>
                 {itemNodes}
             </div>
         )

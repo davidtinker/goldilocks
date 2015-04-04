@@ -24,18 +24,22 @@ function PUT(url, data) {
 }
 
 AppDispatcher.register(function(action) {
-
+    var id;
     switch(action.type) {
         case 'refresh':
-            $.getJSON('/rest', updateApp);
+            $.getJSON('/rest/app', updateApp);
             break;
 
         case 'add-chart':
-            $.post('/rest/charts', updateApp);
+            $.post('/rest/app/charts', updateApp);
             break;
 
         case 'update-settings':
-            PUT('/rest', action.data).success(updateApp);
+            PUT('/rest/app', action.data).success(updateApp);
+            break;
+
+        case 'update-item':
+            PUT('/rest/app/charts/' + action.id.chartId + '/items/' + action.id.id, action.data).success(updateApp);
             break;
     }
 });

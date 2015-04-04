@@ -3,7 +3,6 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import groovy.text.markup.TemplateConfiguration
 import ratpack.form.Form
 import tinker.goldilocks.App
-import tinker.goldilocks.Html
 import tinker.goldilocks.MashTempModule
 
 import ratpack.groovy.template.MarkupTemplateModule
@@ -12,14 +11,14 @@ import ratpack.jackson.JacksonModule
 import tinker.goldilocks.RaspberryPi
 import tinker.goldilocks.TempLogRepo
 import tinker.goldilocks.model.AppState
+import tinker.goldilocks.model.Chart
+import tinker.goldilocks.model.Item
 
 import static ratpack.groovy.Groovy.context
-import static ratpack.groovy.Groovy.groovyMarkupTemplate
 import static ratpack.groovy.Groovy.groovyTemplate
 import static ratpack.groovy.Groovy.ratpack
 import static ratpack.jackson.Jackson.fromJson
 import static ratpack.jackson.Jackson.json
-import static ratpack.jackson.Jackson.jsonNode
 
 ratpack {
 
@@ -42,35 +41,45 @@ ratpack {
     handlers { App app ->
         get {
             render groovyTemplate("index.html", app: app.state)
-
-//            def pi = registry.get(RaspberryPi)
-//            render groovyMarkupTemplate("index.gtpl", app: app.state, tempProbes: pi.listTempProbes(), pins: pi.listPins())
         }
 
         prefix("rest") {
 
-            handler("") {
-                context.byMethod {
-                    get { render(json(app.state)) }
-                    put { render(json(app.updateSettings(context.parse(fromJson(AppState))))) }
-                }
-            }
-
-
-            prefix("charts") {
-                post {
-                    app.addChart()
-                    render(json(app.state))
-                }
-                prefix(":id") {
-                    prefix("items") {
-                        post {
-                            app.addItem(Integer.parseInt(pathTokens['id']))
-                            render(json(app.state))
-                        }
+            prefix("app") {
+                handler("") {
+                    context.byMethod {
+                        get { render(json(app.state)) }
+                        put { render(json(app.updateSettings(parse(fromJson(AppState))))) }
                     }
                 }
+
+                post("charts") {
+                    render(json(app.addChart()))
+                }
+
+                put("charts/:id") {
+                    Chart chart = parse(fromJson(Chart))
+                    chart.id = Integer.parseInt(pathTokens['id'])
+                    render(json(app.updateChart(chart)))
+                }
+
+                post("charts/:id/items") {
+                    render(json(app.addItem(Integer.parseInt(pathTokens['id']))))
+                }
+
+                put("charts/:cid/items/:id") {
+                    def item = parse(fromJson(Item))
+                    item.id = Integer.parseInt(pathTokens['id'])
+                    render(json(app.updateItem(Integer.parseInt(pathTokens['cid']), item)))
+                }
             }
+
+            get("pi") {
+                def pi = registry.get(RaspberryPi)
+                render(json([tempProbes: pi.tempProbes, pins: pi.pins]))
+            }
+
+
 
             get("vessel/:id/history") {
                 def vid = Integer.parseInt(pathTokens['id'])

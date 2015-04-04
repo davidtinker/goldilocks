@@ -14,7 +14,7 @@ class Item {
     /** Matches names of constants in {@link com.pi4j.io.gpio.RaspiPin} */
     String pin
 
-    String colorScheme = "orange"
+    String color = "orange"
 
     Double targetTemp
     String pinState       // off, auto, on

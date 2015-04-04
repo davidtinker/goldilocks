@@ -7,7 +7,7 @@ interface RaspberryPi {
     /**
      * List the ids of all installed w1 temp probes.
      */
-    List<String> listTempProbes() throws IOException
+    List<String> getTempProbes() throws IOException
 
     /**
      * Read the temperature of the probe.
@@ -17,7 +17,7 @@ interface RaspberryPi {
     /**
      * List the ids of all possible pins.
      */
-    List<String> listPins() throws IOException;
+    List<String> getPins() throws IOException;
 
     /**
      * Change the state of the pin.

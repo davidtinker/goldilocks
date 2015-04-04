@@ -12,9 +12,9 @@ var Goldilocks = React.createClass({
         AppStore.addChangeListener(function(){
             this.setState(AppStore.getApp());
         }.bind(this));
-        var f = function() { AppDispatcher.dispatch({type: 'refresh'}) };
-        f();
-        //setInterval(f, 1000);
+        AppDispatcher.dispatch({type: 'refresh'});
+        AppDispatcher.dispatch({type: 'refresh-pi'});
+        //setInterval(function() { AppDispatcher.dispatch({type: 'refresh'}) }, 1000);
     },
 
     handleAddChart: function(ev) {
@@ -25,7 +25,7 @@ var Goldilocks = React.createClass({
     render: function() {
         if (!this.state) return (<div></div>);
         var chartNodes = this.state.charts.map(function(chart){
-            return (<Chart data={chart} key={chart.id}/>)
+            return (<Chart chart={chart} key={chart.id}/>)
         });
         return (
             <div>

@@ -32,7 +32,7 @@ class FakeRaspberryPi implements RaspberryPi {
         timer.cancel()
     }
 
-    List<String> listTempProbes() throws IOException {
+    List<String> getTempProbes() throws IOException {
         return [HLT_PROBE, MASH_PROBE]
     }
 
@@ -43,7 +43,7 @@ class FakeRaspberryPi implements RaspberryPi {
     }
 
     @Override
-    List<String> listPins() throws IOException {
+    List<String> getPins() throws IOException {
         return (0..20).collect { "GPIO_" + String.format("%02d", it) }
     }
 

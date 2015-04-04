@@ -3,6 +3,7 @@ package tinker.goldilocks
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import tinker.goldilocks.model.AppState
+import tinker.goldilocks.model.Chart
 import tinker.goldilocks.model.Item
 
 import javax.annotation.PreDestroy
@@ -71,41 +72,48 @@ class App {
         return refreshState()
     }
 
-    synchronized void deleteChart(Integer chartId) {
+    synchronized AppState updateChart(Chart n) {
+        setupRepo.update { AppState s ->
+            Chart c = s.findChart(n.id);
+        }
+        return refreshState()
+    }
+
+    synchronized AppState deleteChart(Integer chartId) {
         setupRepo.update { AppState s ->
             def c = s.findChart(chartId)
             if (c.items) throw new IllegalArgumentException("Chart ${chartId} still has items")
             s.charts.remove(c)
         }
-        refreshState()
+        return refreshState()
     }
 
-    synchronized void addItem(Integer chartId) {
+    synchronized AppState addItem(Integer chartId) {
         setupRepo.update { AppState s -> s.findChart(chartId).addItem() }
-        refreshState()
+        return refreshState()
     }
 
-    synchronized void updateItem(Map<String, Object> map, Integer chartId, Integer itemId) {
+    synchronized AppState updateItem(Integer chartId, Item n) {
         setupRepo.update { AppState s ->
-            Item i = s.findChart(chartId).findItem(itemId);
-            if (map.name) i.name = map.name
-            if (map.tempProbe != null) i.tempProbe = map.tempProbe ?: null
-            if (map.pin != null) i.pin = map.pin ?: null
-            if (map.colorScheme != null) i.colorScheme = map.colorScheme ?: null
-            if (map.targetTemp) i.targetTemp = map.targetTemp as Double
-            if (map.pinState) i.pinState = map.pinState
+            Item i = s.findChart(chartId).findItem(n.id);
+            if (n.name) i.name = n.name
+            if (n.tempProbe != null) i.tempProbe = n.tempProbe ?: null
+            if (n.pin != null) i.pin = n.pin ?: null
+            if (n.color != null) i.color = n.color ?: null
+            if (n.targetTemp) i.targetTemp = n.targetTemp as Double
+            if (n.pinState) i.pinState = n.pinState
         }
-        refreshState()
+        return refreshState()
     }
 
-    synchronized void deleteItem(Integer chartId, Integer itemId) {
+    synchronized AppState deleteItem(Integer chartId, Integer itemId) {
         setupRepo.update { AppState s ->
             def c = s.findChart(chartId)
             def i = c.findItem(itemId)
             if (i.pin) pi.setPin(i.pin, false)
             c.items.remove(i)
         }
-        refreshState()
+        return refreshState()
     }
 
     private synchronized AppState refreshState() throws IOException {
