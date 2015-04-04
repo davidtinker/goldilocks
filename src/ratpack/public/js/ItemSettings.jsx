@@ -18,7 +18,7 @@ var ItemSettings = React.createClass({
         PiStore.removeChangeListener(this._changeListener);
     },
 
-    handleSubmit: function(ev) {
+    onSubmit: function(ev) {
         ev.preventDefault();
         AppDispatcher.dispatch({
             type: 'update-item',
@@ -36,7 +36,7 @@ var ItemSettings = React.createClass({
         if (this.props.onComplete) this.props.onComplete(true);
     },
 
-    handleCancel: function(ev) {
+    onCancel: function(ev) {
         ev.preventDefault();
         if (this.props.onComplete) this.props.onComplete(false);
     },
@@ -50,7 +50,7 @@ var ItemSettings = React.createClass({
             return (<option value={p} key={p}>{p || 'None'}</option>)
         });
         return (
-            <form className="item-settings" onSubmit={this.handleSubmit}>
+            <form className="item-settings" onSubmit={this.onSubmit}>
                 <label>
                     <span>Name</span>
                     <input ref='name' defaultValue={i.name}/>
@@ -74,7 +74,7 @@ var ItemSettings = React.createClass({
                     <span/>
                     <span>
                         <input type='submit' value='Save'/>
-                        <a className="btn cancel" href="" onClick={this.handleCancel}>Cancel</a>
+                        <a className="btn cancel" href="" onClick={this.onCancel}>Cancel</a>
                     </span>
                 </div>
             </form>

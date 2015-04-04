@@ -11,7 +11,7 @@ var TitleBar = React.createClass({
         this.setState({showSettings: !this.state.showSettings})
     },
 
-    handleSettingsSave: function(ev) {
+    onSettingsComplete: function(ev) {
         this.setState({showSettings: false})
     },
 
@@ -21,7 +21,7 @@ var TitleBar = React.createClass({
                 <h1 onClick={this.handleTitleClick}>{this.props.app.title}</h1>
                 <Clock data={this.props.app}/>
                 {this.state.showSettings
-                    ? <AppSettings onSave={this.handleSettingsSave} app={this.props.app}/>
+                    ? <AppSettings onComplete={this.onSettingsComplete} app={this.props.app}/>
                     : ''}
             </div>
         )
