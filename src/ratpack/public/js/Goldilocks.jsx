@@ -1,11 +1,11 @@
 var React = require('react');
-var $ = require('jquery');
 
 var AppDispatcher = require('./AppDispatcher');
 var AppStore = require('./AppStore');
 
 var TitleBar = require('./TitleBar.jsx');
 var Chart = require('./Chart.jsx');
+var ModalStack = require('./ModalStack.jsx');
 
 var Goldilocks = React.createClass({
 
@@ -36,6 +36,7 @@ var Goldilocks = React.createClass({
                 <TitleBar app={this.state}/>
                 {chartNodes}
                 <a href="" className="btn" onClick={this.onAddChart}>Add Chart</a>
+                <ModalStack/>
             </div>
         )
     }

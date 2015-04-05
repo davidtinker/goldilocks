@@ -1,14 +1,14 @@
 var React = require('react');
 
+var ModalStore = require('./ModalStore');
+
 var Clock = require('./Clock.jsx');
 var AppSettings = require('./AppSettings.jsx');
 
 var TitleBar = React.createClass({
 
-    getInitialState: function() { return {} },
-
-    handleTitleClick: function(ev) {
-        this.setState({showSettings: !this.state.showSettings})
+    onTitleClick: function(ev) {
+        ModalStore.push(<AppSettings onComplete={ModalStore.pop.bind(ModalStore)} app={this.props.app}/>);
     },
 
     onSettingsComplete: function(ev) {
@@ -18,11 +18,11 @@ var TitleBar = React.createClass({
     render: function() {
         return (
             <div className="title-bar">
-                <h1 onClick={this.handleTitleClick}>{this.props.app.title}</h1>
                 <Clock time={this.props.app.updated}/>
-                {this.state.showSettings
-                    ? <AppSettings onComplete={this.onSettingsComplete} app={this.props.app}/>
-                    : ''}
+                <div className="clickable" onClick={this.onTitleClick} title="Click to change settings">
+                    <span className="brand">Golidlocks</span>
+                    <span className="title">{this.props.app.title}</span>
+                </div>
             </div>
         )
     }

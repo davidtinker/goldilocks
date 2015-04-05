@@ -1,90 +1,97 @@
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    /*font-size: 12px;*/
+    font-size: 14px;
     font-weight: lighter;
     background: #161616;
     color: #bbbfc2;
 }
 
-h1 {
-    /*font-size: 109%;*/
-    /*line-height: 120%;*/
-}
-
-.col form.vert {
-    margin-left: 1em;
-    margin-right: 1em;
-    margin-top: 1em;
-}
-
-form.vert label,
-form.vert .actions {
-    display: table-row;
-}
-
-form.vert label span:first-child,
-form.vert .actions span:first-child {
-    display: table-cell;
-    text-align: right;
-    padding-right: 0.2em;
-}
-
-form.vert label > input,
-form.vert .actions > span {
-    display: table-cell;
-}
-
-a.btn {
-    color: #bbbfc2;
-}
-
-input.delete {
-    float: right;
+.clickable {
+    cursor: pointer;
 }
 
 .title-bar {
     background-color: #1f1f1f;
+    font-size: 120%;
+    font-weight: bold;
+    padding: 0.2em;
+}
+
+.brand {
+    color: #e9b746;
+    float: left;
+    padding-right: 1em;
 }
 
 .clock {
+    float: right;
 }
 
 .chart {
+    margin-top: 1em;
+    display: table;
+    width: 100%;
+}
+
+.chart .inner {
+    display: table-row;
+}
+
+.graph {
+    display: table-cell;
+    padding: 0.2em;
     background-color: #1f1f1f;
+    width: 80%;
+    height: 20em;
 }
 
-.items {
+.controls {
+    width: 25%;
+    display: table-cell;
+    padding-left: 1em;
 }
 
-.item {
+.control {
+    padding: 0.2em;
+    background-color: #1f1f1f;
+    margin-bottom: 1em;
 }
 
-.graph,
-.items {
-}
-
-.vessel h1 {
-    margin: 0;
-    padding-top: 0.5em;
-    text-align: center;
-    cursor: pointer;
-}
-
-.vessel .hint {
-    text-align: center;
-    padding: 0.5em;
-}
-
-span.temp-probe {
+.temp {
     color: #ed8445;
     font-weight: bold;
-    float: right;
-    padding-right: 2em;
-    font-size: 120%;
+    text-align: center;
 }
 
-.vessel.blue span.temp-probe {
+.temp label {
+    display: block;
+}
+
+.temp .value {
+    font-size: 300%;
+}
+
+.temp.blue {
     color: #72d0df;
+}
+
+.app-settings {
+    width: 20em;
+    height: 10em;
+}
+
+.modal {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.modal > * {
+    display: block;
+    margin:0 auto;
 }
 
 form.heater {
@@ -151,4 +158,29 @@ text {
 
 .main-actions {
     text-align: center;
+}
+
+form.vert label,
+form.vert .actions {
+    display: table-row;
+}
+
+form.vert label span:first-child,
+form.vert .actions span:first-child {
+    display: table-cell;
+    text-align: right;
+    padding-right: 0.2em;
+}
+
+form.vert label > input,
+form.vert .actions > span {
+    display: table-cell;
+}
+
+a.btn {
+    color: #bbbfc2;
+}
+
+input.delete {
+    float: right;
 }

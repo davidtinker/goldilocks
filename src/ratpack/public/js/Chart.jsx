@@ -18,12 +18,15 @@ var Chart = React.createClass({
         });
         return (
             <div className="chart">
-                <h2>chart {chart.id}</h2>
-                <Graph chart={chart}/>
-                <div className="controls">
-                    {controlNodes}
+                <div className="inner">
+                    <Graph chart={chart}/>
+                    <div className="controls">
+                        {controlNodes}
+                        <div>
+                            <a href="" className="btn" onClick={this.onAddControl}>Add Control</a>
+                        </div>
+                    </div>
                 </div>
-                <a href="" className="btn" onClick={this.onAddControl}>Add Control</a>
             </div>
         )
     }
