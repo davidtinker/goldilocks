@@ -38,8 +38,12 @@ AppDispatcher.register(function(action) {
             PUT('/rest/app', action.data).success(updateApp);
             break;
 
-        case 'update-item':
-            PUT('/rest/app/charts/' + action.id.chartId + '/items/' + action.id.id, action.data).success(updateApp);
+        case 'add-control':
+            $.post('/rest/app/charts/' + action.id.chartId + '/controls', updateApp);
+            break;
+
+        case 'update-control':
+            PUT('/rest/app/charts/' + action.id.chartId + '/controls/' + action.id.id, action.data).success(updateApp);
             break;
     }
 });

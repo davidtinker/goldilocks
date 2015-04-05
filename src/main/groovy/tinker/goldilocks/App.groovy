@@ -4,7 +4,7 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import tinker.goldilocks.model.AppState
 import tinker.goldilocks.model.Chart
-import tinker.goldilocks.model.Item
+import tinker.goldilocks.model.Control
 
 import javax.annotation.PreDestroy
 import javax.inject.Inject
@@ -82,36 +82,36 @@ class App {
     synchronized AppState deleteChart(Integer chartId) {
         setupRepo.update { AppState s ->
             def c = s.findChart(chartId)
-            if (c.items) throw new IllegalArgumentException("Chart ${chartId} still has items")
+            if (c.controls) throw new IllegalArgumentException("Chart ${chartId} still has items")
             s.charts.remove(c)
         }
         return refreshState()
     }
 
-    synchronized AppState addItem(Integer chartId) {
-        setupRepo.update { AppState s -> s.findChart(chartId).addItem() }
+    synchronized AppState addControl(Integer chartId) {
+        setupRepo.update { AppState s -> s.findChart(chartId).addControl() }
         return refreshState()
     }
 
-    synchronized AppState updateItem(Integer chartId, Item n) {
+    synchronized AppState updateControl(Integer chartId, Control n) {
         setupRepo.update { AppState s ->
-            Item i = s.findChart(chartId).findItem(n.id);
-            if (n.name) i.name = n.name
-            if (n.tempProbe != null) i.tempProbe = n.tempProbe ?: null
-            if (n.pin != null) i.pin = n.pin ?: null
-            if (n.color != null) i.color = n.color ?: null
-            if (n.targetTemp) i.targetTemp = n.targetTemp as Double
-            if (n.pinState) i.pinState = n.pinState
+            Control c = s.findChart(chartId).findControl(n.id);
+            if (n.name) c.name = n.name
+            if (n.tempProbe != null) c.tempProbe = n.tempProbe ?: null
+            if (n.pin != null) c.pin = n.pin ?: null
+            if (n.color != null) c.color = n.color ?: null
+            if (n.targetTemp) c.targetTemp = n.targetTemp as Double
+            if (n.pinState) c.pinState = n.pinState
         }
         return refreshState()
     }
 
-    synchronized AppState deleteItem(Integer chartId, Integer itemId) {
+    synchronized AppState deleteControl(Integer chartId, Integer controlId) {
         setupRepo.update { AppState s ->
             def c = s.findChart(chartId)
-            def i = c.findItem(itemId)
+            def i = c.findControl(controlId)
             if (i.pin) pi.setPin(i.pin, false)
-            c.items.remove(i)
+            c.controls.remove(i)
         }
         return refreshState()
     }
@@ -120,7 +120,7 @@ class App {
         def state = setupRepo.load()
         List<Callable> jobs = []
         state.charts.each { c ->
-            c.items.each { i ->
+            c.controls.each { i ->
                 if (i.tempProbe) jobs << {
                     try {
                         i.temp = pi.readTemp(i.tempProbe)

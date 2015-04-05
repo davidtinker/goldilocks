@@ -1,14 +1,14 @@
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 12px;
+    /*font-size: 12px;*/
     font-weight: lighter;
     background: #161616;
     color: #bbbfc2;
 }
 
 h1 {
-    font-size: 109%;
-    line-height: 120%;
+    /*font-size: 109%;*/
+    /*line-height: 120%;*/
 }
 
 .col form.vert {
@@ -34,48 +34,33 @@ form.vert .actions > span {
     display: table-cell;
 }
 
+a.btn {
+    color: #bbbfc2;
+}
+
 input.delete {
     float: right;
 }
 
-.row {
-    clear: both;
+.title-bar {
+    background-color: #1f1f1f;
 }
 
-.col {
-    width: 640px;
-    margin-bottom: 10px;
+.clock {
 }
 
 .chart {
-    display: table-row;
+    background-color: #1f1f1f;
+}
+
+.items {
+}
+
+.item {
 }
 
 .graph,
 .items {
-    display: table-cell;
-}
-
-.title {
-    background-color: #1f1f1f;
-    position: relative;
-    cursor: pointer;
-}
-
-.brand {
-    padding-left: 1em;
-    color: #e9b746;
-}
-
-.time {
-    font-size: 120%;
-    font-weight: bold;
-    padding-right: 1em;
-    float: right;
-}
-
-.vessel {
-    background-color: #1f1f1f;
 }
 
 .vessel h1 {

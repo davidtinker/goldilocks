@@ -8,18 +8,22 @@ var TitleBar = require('./TitleBar.jsx');
 var Chart = require('./Chart.jsx');
 
 var Goldilocks = React.createClass({
+
     componentDidMount: function() {
-        AppStore.addChangeListener(function(){
-            this.setState(AppStore.getApp());
-        }.bind(this));
+        AppStore.addChangeListener(this._changeListener = function(){ this.setState(AppStore.getApp()); }.bind(this));
         AppDispatcher.dispatch({type: 'refresh'});
         AppDispatcher.dispatch({type: 'refresh-pi'});
-        //setInterval(function() { AppDispatcher.dispatch({type: 'refresh'}) }, 1000);
+        //this._interval = setInterval(function() { AppDispatcher.dispatch({type: 'refresh'}) }, 1000);
     },
 
-    handleAddChart: function(ev) {
+    componentWillUnmount: function() {
+        AppStore.removeChangeListener(this._changeListener);
+        clearInterval(this._interval);
+    },
+
+    onAddChart: function(ev) {
         ev.preventDefault();
-        AppDispatcher.dispatch({type: 'addChart'});
+        AppDispatcher.dispatch({type: 'add-chart'});
     },
 
     render: function() {
@@ -31,7 +35,7 @@ var Goldilocks = React.createClass({
             <div>
                 <TitleBar app={this.state}/>
                 {chartNodes}
-                <a className="btn" href="" onClick={this.handleAddChart}>Add Chart</a>
+                <a href="" className="btn" onClick={this.onAddChart}>Add Chart</a>
             </div>
         )
     }

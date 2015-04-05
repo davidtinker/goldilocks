@@ -4,7 +4,7 @@ package tinker.goldilocks.model
  * A temp probe with pin and target temp. This might just be a temp probe (e.g. for mash tun) or just a pin
  * (e.g. for turning on a pump).
  */
-class Item {
+class Control {
 
     int id
     String name

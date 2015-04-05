@@ -3,7 +3,7 @@ var React = require('react');
 var AppDispatcher = require('./AppDispatcher');
 var PiStore = require('./PiStore');
 
-var ItemSettings = React.createClass({
+var ControlSettings = React.createClass({
 
     getInitialState: function() {
         return PiStore.getPi();
@@ -21,10 +21,10 @@ var ItemSettings = React.createClass({
     onSubmit: function(ev) {
         ev.preventDefault();
         AppDispatcher.dispatch({
-            type: 'update-item',
+            type: 'update-control',
             id: {
                 chartId: this.props.chart.id,
-                id: this.props.item.id
+                id: this.props.control.id
             },
             data: {
                 name: this.refs.name.getDOMNode().value.trim(),
@@ -42,7 +42,7 @@ var ItemSettings = React.createClass({
     },
 
     render: function() {
-        var i = this.props.item || {};
+        var c = this.props.control || {};
         var tempProbes = [''].concat(this.state.tempProbes).map(function(p){
             return (<option value={p} key={p}>{p || 'None'}</option>)
         });
@@ -50,22 +50,22 @@ var ItemSettings = React.createClass({
             return (<option value={p} key={p}>{p || 'None'}</option>)
         });
         return (
-            <form className="item-settings" onSubmit={this.onSubmit}>
+            <form className="control-settings" onSubmit={this.onSubmit}>
                 <label>
                     <span>Name</span>
-                    <input ref='name' defaultValue={i.name}/>
+                    <input ref='name' defaultValue={c.name}/>
                 </label>
                 <label>
                     <span>Temp Probe</span>
-                    <select ref='tempProbe' defaultValue={i.tempProbe || ''}>{tempProbes}</select>
+                    <select ref='tempProbe' defaultValue={c.tempProbe || ''}>{tempProbes}</select>
                 </label>
                 <label>
                     <span>Output Pin</span>
-                    <select ref='pin' defaultValue={i.pin || ''}>{pins}</select>
+                    <select ref='pin' defaultValue={c.pin || ''}>{pins}</select>
                 </label>
                 <label>
                     <span>Color</span>
-                    <select ref='color' defaultValue={i.color || 'blue'}>
+                    <select ref='color' defaultValue={c.color || 'blue'}>
                         <option value='blue'>Blue</option>
                         <option value='orange'>Orange</option>
                     </select>
@@ -82,4 +82,4 @@ var ItemSettings = React.createClass({
     }
 });
 
-module.exports = ItemSettings;
+module.exports = ControlSettings;

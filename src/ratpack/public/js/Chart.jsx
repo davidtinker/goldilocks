@@ -1,19 +1,29 @@
 var React = require('react');
-var $ = require('jquery');
+var AppDispatcher = require('./AppDispatcher');
 
-var Item = require('./Item.jsx');
+var Control = require('./Control.jsx');
+var Graph = require('./Graph.jsx');
 
 var Chart = React.createClass({
 
+    onAddControl: function(ev) {
+        ev.preventDefault();
+        AppDispatcher.dispatch({type: 'add-control', id: {chartId: this.props.chart.id}});
+    },
+
     render: function() {
         var chart = this.props.chart;
-        var itemNodes = chart.items.map(function(item) {
-            return ( <Item item={item} chart={chart} key={item.id}/> )
+        var controlNodes = chart.controls.map(function(control) {
+            return ( <Control control={control} chart={chart} key={control.id}/> )
         });
         return (
             <div className="chart">
                 <h2>chart {chart.id}</h2>
-                {itemNodes}
+                <Graph chart={chart}/>
+                <div className="controls">
+                    {controlNodes}
+                </div>
+                <a href="" className="btn" onClick={this.onAddControl}>Add Control</a>
             </div>
         )
     }

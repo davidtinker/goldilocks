@@ -19,7 +19,7 @@ var TitleBar = React.createClass({
         return (
             <div className="title-bar">
                 <h1 onClick={this.handleTitleClick}>{this.props.app.title}</h1>
-                <Clock data={this.props.app}/>
+                <Clock time={this.props.app.updated}/>
                 {this.state.showSettings
                     ? <AppSettings onComplete={this.onSettingsComplete} app={this.props.app}/>
                     : ''}

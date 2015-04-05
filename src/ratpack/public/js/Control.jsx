@@ -3,15 +3,15 @@ var AppStore = require('./AppStore');
 var AppDispatcher = require('./AppDispatcher');
 
 var TempReading = require('./TempReading.jsx');
-var ItemSettings = require('./ItemSettings.jsx');
+var ControlSettings = require('./ControlSettings.jsx');
 var TempSpinner = require('./TempSpinner.jsx');
 
-var Item = React.createClass({
+var Control = React.createClass({
 
     getInitialState: function() {
         return {
             showSettings: false,
-            pinState: this.props.item.pinState || 'off'
+            pinState: this.props.control.pinState || 'off'
         }
     },
 
@@ -28,10 +28,10 @@ var Item = React.createClass({
         var data = {pinState: this.state.pinState};
         if (this.refs.targetTemp) data.targetTemp = this.refs.targetTemp.value;
         AppDispatcher.dispatch({
-            type: 'update-item',
+            type: 'update-control',
             id: {
                 chartId: this.props.chart.id,
-                id: this.props.item.id
+                id: this.props.control.id
             },
             data: data
         });
@@ -42,7 +42,7 @@ var Item = React.createClass({
     },
 
     render: function() {
-        var i = this.props.item;
+        var i = this.props.control;
         var ps = this.state.pinState;
 
         var tp;
@@ -75,15 +75,15 @@ var Item = React.createClass({
             </form>
         );
         return (
-            <div className="item">
+            <div className="control">
                 {tp}
                 {pf}
                 {this.state.showSettings
-                    ? <ItemSettings onComplete={this.onSettingsComplete} item={i} chart={this.props.chart}/>
+                    ? <ControlSettings onComplete={this.onSettingsComplete} control={i} chart={this.props.chart}/>
                     : ''}
             </div>
         )
     }
 });
 
-module.exports = Item;
+module.exports = Control;

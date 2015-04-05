@@ -1,8 +1,10 @@
 var React = require('react');
+var moment = require('moment');
 
 var Clock = React.createClass({
     render: function() {
-        return (<div className="clock">x{this.props.data.updated}</div>)
+        var t = moment(this.props.time).format('h:mm:ss A');
+        return (<div className="clock">{t}</div>)
     }
 });
 

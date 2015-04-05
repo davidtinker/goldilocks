@@ -3,19 +3,19 @@ package tinker.goldilocks.model
 class Chart {
 
     int id
-    List<Item> items = []
+    List<Control> controls = []
 
-    Item findItem(Integer itemId) {
-        Item i = items.find { it.id == itemId }
+    Control findControl(Integer itemId) {
+        Control i = controls.find { it.id == itemId }
         if (!i) throw new IllegalArgumentException("Item not found for id ${itemId} in Chart ${id}")
         return i
     }
 
-    Item addItem() {
+    Control addControl() {
         int max = 0
-        items.each { if (it.id > max) max = it.id }
-        def ans = new Item(id: max + 1)
-        items << ans
+        controls.each { if (it.id > max) max = it.id }
+        def ans = new Control(id: max + 1)
+        controls << ans
         return ans
     }
 }
