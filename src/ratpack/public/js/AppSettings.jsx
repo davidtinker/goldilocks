@@ -24,6 +24,7 @@ var AppSettings = React.createClass({
     render: function() {
         return (
             <form className="app-settings" onSubmit={this.handleSubmit}>
+                <h1>Settings</h1>
                 <label>
                     <span>Title</span>
                     <input ref='title' defaultValue={this.props.app.title}/>
@@ -36,11 +37,8 @@ var AppSettings = React.createClass({
                     </select>
                 </label>
                 <div className='actions'>
-                    <span/>
-                    <span>
-                        <input type='submit' value='Save'/>
-                        <a href="" className="btn cancel" onClick={this.handleCancel}>Cancel</a>
-                    </span>
+                    <input type='submit' value='Save'/>
+                    <a href="" className="btn secondary" onClick={this.handleCancel}>cancel</a>
                 </div>
             </form>
         )

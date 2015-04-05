@@ -1,9 +1,14 @@
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 14px;
-    font-weight: lighter;
     background: #161616;
     color: #bbbfc2;
+    font-size: 14px;
+}
+
+h1 {
+    color: #e9b746;
+    font-size: 120%;
+    margin-top: 0;
 }
 
 .clickable {
@@ -76,14 +81,13 @@ body {
 }
 
 .app-settings {
-    width: 20em;
-    height: 10em;
+    width: 16em;
 }
 
 .modal {
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.25);
     position: fixed;
     top: 0;
     left: 0;
@@ -91,7 +95,20 @@ body {
 
 .modal > * {
     display: block;
-    margin:0 auto;
+    margin: 0 auto;
+    background-color: #2C2C2C;
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    padding: 1em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    border-radius: 0.5em;
+    /*-webkit-box-shadow: 0px 0px 16px 0px rgba(233,183,70,1);*/
+    /*-moz-box-shadow: 0px 0px 16px 0px rgba(233,183,70,1);*/
+    /*box-shadow: 0px 0px 16px 0px rgba(233,183,70,1);*/
 }
 
 form.heater {
@@ -160,25 +177,43 @@ text {
     text-align: center;
 }
 
-form.vert label,
-form.vert .actions {
+form {
+    position: relative;
+}
+
+form label {
     display: table-row;
 }
 
-form.vert label span:first-child,
-form.vert .actions span:first-child {
+form label span:first-child {
     display: table-cell;
     text-align: right;
-    padding-right: 0.2em;
+    padding: 0.5em 0.4em 0.5em 0;
 }
 
-form.vert label > input,
-form.vert .actions > span {
+form label > input {
     display: table-cell;
+}
+
+form .actions {
+    padding-top: 1em;
+}
+
+form .actions a {
+    margin-left: 1em;
 }
 
 a.btn {
     color: #bbbfc2;
+    text-decoration: none;
+}
+
+a.btn.secondary {
+    color: #929598;
+}
+
+a.btn:hover {
+    color: #fff;
 }
 
 input.delete {
