@@ -17,7 +17,7 @@ function updateApp(data) {
     AppStore.emitChange();
 }
 
-function PUT(url, data) {
+function put(url, data) {
     var args = { type: "PUT", url: url, contentType: "application/json"};
     if (data) args.data = JSON.stringify(data);
     return $.ajax(args);
@@ -35,7 +35,7 @@ AppDispatcher.register(function(action) {
             break;
 
         case 'update-settings':
-            PUT('/rest/app', action.data).success(updateApp);
+            put('/rest/app', action.data).success(updateApp);
             break;
 
         case 'add-control':
@@ -43,7 +43,11 @@ AppDispatcher.register(function(action) {
             break;
 
         case 'update-control':
-            PUT('/rest/app/charts/' + action.id.chartId + '/controls/' + action.id.id, action.data).success(updateApp);
+            put('/rest/app/charts/' + action.id.chartId + '/controls/' + action.id.id, action.data).success(updateApp);
+            break;
+
+        case 'delete-control':
+            $.ajax({type: "DELETE", url: '/rest/app/charts/' + action.id.chartId + '/controls/' + action.id.id}).success(updateApp);
             break;
     }
 });

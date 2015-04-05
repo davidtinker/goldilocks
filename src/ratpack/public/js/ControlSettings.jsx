@@ -41,6 +41,19 @@ var ControlSettings = React.createClass({
         if (this.props.onComplete) this.props.onComplete(false);
     },
 
+    onDelete: function(ev) {
+        ev.preventDefault();
+        if (!window.confirm("Are you sure you want to delete this control?")) return;
+        AppDispatcher.dispatch({
+            type: 'delete-control',
+            id: {
+                chartId: this.props.chart.id,
+                id: this.props.control.id
+            }
+        });
+        if (this.props.onComplete) this.props.onComplete(true);
+    },
+
     render: function() {
         var c = this.props.control || {};
         var tempProbes = [''].concat(this.state.tempProbes).map(function(p){
@@ -74,7 +87,8 @@ var ControlSettings = React.createClass({
                     <span/>
                     <span>
                         <input type='submit' value='Save'/>
-                        <a className="btn cancel" href="" onClick={this.onCancel}>Cancel</a>
+                        <a key='cancel' className="btn cancel" href="" onClick={this.onCancel}>Cancel</a>
+                        <a key='delete' className="btn delete" href="" onClick={this.onDelete}>Delete</a>
                     </span>
                 </div>
             </form>

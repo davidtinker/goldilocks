@@ -65,11 +65,20 @@ ratpack {
                     render(json(app.addControl(Integer.parseInt(pathTokens['id']))))
                 }
 
-                put("charts/:cid/controls/:id") {
-                    def control = parse(fromJson(Control))
-                    control.id = Integer.parseInt(pathTokens['id'])
-                    render(json(app.updateControl(Integer.parseInt(pathTokens['cid']), control)))
+                handler("charts/:cid/controls/:id") {
+                    context.byMethod {
+                        put {
+                            def control = parse(fromJson(Control))
+                            control.id = Integer.parseInt(pathTokens['id'])
+                            render(json(app.updateControl(Integer.parseInt(pathTokens['cid']), control)))
+                        }
+                        delete {
+                            render(json(app.deleteControl(Integer.parseInt(pathTokens['cid']),
+                                    Integer.parseInt(pathTokens['id']))))
+                        }
+                    }
                 }
+
             }
 
             get("pi") {

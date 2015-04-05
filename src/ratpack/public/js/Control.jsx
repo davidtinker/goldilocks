@@ -76,6 +76,9 @@ var Control = React.createClass({
         );
         return (
             <div className="control">
+                {!i.tempProbe && !i.pin
+                    ? <div onClick={this.onToggleSettings}>Click to setup control</div>
+                    : ''}
                 {tp}
                 {pf}
                 {this.state.showSettings
