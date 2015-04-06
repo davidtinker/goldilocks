@@ -66,6 +66,14 @@ h1 {
     width: 16em;
 }
 
+.pin-state {
+    width: 16em;
+}
+
+.pin-state .radio-group {
+    margin-bottom: 0.5em;
+}
+
 .temp {
     color: #ed8445;
     font-weight: bold;
@@ -185,18 +193,22 @@ form {
     position: relative;
 }
 
-form label {
+form > label {
     display: table-row;
 }
 
-form label span:first-child {
+form > label span:first-child {
     display: table-cell;
     text-align: right;
     padding: 0.5em 0.4em 0.5em 0;
 }
 
-form label > input {
+form > label > input {
     display: table-cell;
+}
+
+form .radio-group label {
+    padding-right: 0.5em;
 }
 
 form .actions {

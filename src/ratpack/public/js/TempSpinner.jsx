@@ -31,10 +31,7 @@ var TempSpinner = React.createClass({
 
         return (
             <span onChange={this.handleChange}>
-                <label>
-                    <span>{this.props.label}</span>
-                    <select ref='units' value={units}>{options(f ? 68 : 20, f ? 212 : 100, '')}</select>
-                </label>
+                <select ref='units' value={units}>{options(f ? 68 : 20, f ? 212 : 100, '')}</select>
                 <select ref='points' value={points}>{options(0, 9, '.')}</select>
                 <span>{'\u00B0' + (f ? 'F' : 'C')}</span>
             </span>

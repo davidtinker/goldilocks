@@ -5,78 +5,54 @@ var AppDispatcher = require('./AppDispatcher');
 
 var TempReading = require('./TempReading.jsx');
 var ControlSettings = require('./ControlSettings.jsx');
-var TempSpinner = require('./TempSpinner.jsx');
+var PinState = require('./PinState.jsx');
 
 var Control = React.createClass({
 
-    getInitialState: function() {
-        return { pinState: this.props.control.pinState || 'off' }
-    },
-
-    onToggleSettings: function(ev) {
+    onChangeSettings: function(ev) {
         ModalStore.push(
             <ControlSettings control={this.props.control} chart={this.props.chart} onComplete={ModalStore.pop.bind(ModalStore)}/>
         );
     },
 
-    onSubmit: function(ev) {
-        ev.preventDefault();
-        var data = {pinState: this.state.pinState};
-        if (this.refs.targetTemp) data.targetTemp = this.refs.targetTemp.value;
-        AppDispatcher.dispatch({
-            type: 'update-control',
-            id: {
-                chartId: this.props.chart.id,
-                id: this.props.control.id
-            },
-            data: data
-        });
-    },
-
-    onPinStateChange: function(ev) {
-        if (ev.target.checked && ev.target.type == "radio") this.setState({pinState: ev.target.value});
+    onChangePinState: function(ev) {
+        ModalStore.push(
+            <PinState control={this.props.control} chart={this.props.chart} onComplete={ModalStore.pop.bind(ModalStore)}/>
+        );
     },
 
     render: function() {
         var i = this.props.control;
-        var ps = this.state.pinState;
+        var heater = i.tempProbe && i.pin;
 
         var tp;
         if (i.tempProbe) tp = (
-            <div onClick={this.onToggleSettings} title="Click to configure">
+            <div onClick={this.onChangeSettings} title="Click to configure">
                 <TempReading name={i.name || 'Temp'} color={i.color} temp={i.temp}/>
             </div>
         );
 
         var tf;
-        if (i.tempProbe && i.pin) tf = (
-            <span>
-                <label><input type='radio' name='pinState' value='auto' defaultChecked={ps == 'auto'}/><span>Auto</span></label>
-                <TempSpinner ref='targetTemp' label=' target ' value={i.targetTemp || 67.0}/>
-            </span>
-        );
-
-        var pf;
-        if (i.pin) pf = (
-            <form onSubmit={this.onSubmit}>
-                <label onClick={this.onToggleSettings} title="Click to configure">
-                    {i.tempProbe ? 'Heater' : i.name || 'Pin'}
-                </label>
-                <span onChange={this.onPinStateChange}>
-                    <label><input type='radio' name='pinState' value='off' defaultChecked={ps == 'off'}/><span>Off</span></label>
-                    <label><input type='radio' name='pinState' value='on' defaultChecked={ps == 'on'}/><span>On</span></label>
-                    {tf}
-                </span>
-                <input type="submit" value="Go"/>
-            </form>
-        );
+        if (i.pin) {
+            var ps = i.pinState || 'off';
+            var psl = ps.charAt(0).toUpperCase() + ps.substring(1);
+            tf = (
+                <div onClick={this.onChangePinState} title="Click to change">
+                    <label>{heater ? 'Heater' : i.name}</label>
+                    <span className={"pin " + ps}>{psl}</span>
+                    {heater && ps == 'auto'
+                        ? <TempReading name={'Target'} color={i.color} temp={i.targetTemp}/>
+                        : ''}
+                </div>
+            );
+        }
         return (
             <div className="control">
                 {!i.tempProbe && !i.pin
-                    ? <div onClick={this.onToggleSettings}>Click to setup control</div>
+                    ? <div onClick={this.onChangeSettings}>Click to setup control</div>
                     : ''}
                 {tp}
-                {pf}
+                {tf}
             </div>
         )
     }
