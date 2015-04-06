@@ -16,9 +16,12 @@ var RadioGroup = React.createClass({
     render: function() {
         var value = this.state.value;
         var name = this.props.name;
-        var ops = this.props.options.map(function(o){
-            return <label><input type='radio' name={name} value={o.value} defaultChecked={value == o.value}/><span>{o.label}</span></label>
-        });
+        var ops = this.props.options.map(function(o){ return (
+            <label>
+                <input type='radio' name={name} value={o.value} defaultChecked={value == o.value} autoFocus={!!o.autoFocus}/>
+                <span>{o.label}</span>
+            </label>
+        )});
         return <div className="radio-group" onChange={this.onChange}>{ops}</div>
     }
 });

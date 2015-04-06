@@ -14,7 +14,7 @@ class Control {
     /** Matches names of constants in {@link com.pi4j.io.gpio.RaspiPin} */
     String pin
 
-    String color = "orange"
+    String color
 
     Double targetTemp
     String pinState       // off, auto, on

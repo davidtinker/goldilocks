@@ -35,7 +35,7 @@ var PinState = React.createClass({
         var heater = c.tempProbe && c.pin;
 
         var ops = [
-            {value: 'off', label: 'Off'},
+            {value: 'off', label: 'Off', autoFocus: true},
             {value: 'on', label: 'On'}
         ];
         if (heater) ops.push({value: 'auto', label: 'Auto'});

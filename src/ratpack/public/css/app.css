@@ -75,7 +75,6 @@ h1 {
 }
 
 .temp {
-    color: #ed8445;
     font-weight: bold;
     text-align: center;
 }
@@ -88,9 +87,11 @@ h1 {
     font-size: 300%;
 }
 
-.temp.blue {
-    color: #72d0df;
-}
+.temp.orange { color: #ed8445 }
+.temp.orange-alt { color: #e04e47 }
+
+.temp.blue { color: #72d0df }
+.temp.blue-alt { color: #7fb170 }
 
 .app-settings {
     width: 16em;
