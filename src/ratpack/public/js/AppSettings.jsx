@@ -4,7 +4,7 @@ var AppDispatcher = require('./AppDispatcher');
 
 var AppSettings = React.createClass({
 
-    handleSubmit: function(ev) {
+    onSubmit: function(ev) {
         ev.preventDefault();
         AppDispatcher.dispatch({
             type: 'update-settings',
@@ -16,18 +16,22 @@ var AppSettings = React.createClass({
         if (this.props.onComplete) this.props.onComplete(true);
     },
 
-    handleCancel: function(ev) {
+    onCancel: function(ev) {
         ev.preventDefault();
         if (this.props.onComplete) this.props.onComplete(false);
     },
 
+    onKeyDown: function(ev) {
+        if (ev.keyCode == 27) this.onCancel(ev);
+    },
+
     render: function() {
         return (
-            <form className="app-settings" onSubmit={this.handleSubmit}>
+            <form className="app-settings" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
                 <h1>Settings</h1>
                 <label>
                     <span>Title</span>
-                    <input ref='title' defaultValue={this.props.app.title}/>
+                    <input ref='title' defaultValue={this.props.app.title} autoFocus='true'/>
                 </label>
                 <label>
                     <span>Temp Units</span>
@@ -38,7 +42,7 @@ var AppSettings = React.createClass({
                 </label>
                 <div className='actions'>
                     <input type='submit' value='Save'/>
-                    <a href="" className="btn secondary" onClick={this.handleCancel}>cancel</a>
+                    <a href="" className="btn cancel" onClick={this.onCancel}>cancel</a>
                 </div>
             </form>
         )

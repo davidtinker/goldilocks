@@ -62,6 +62,10 @@ h1 {
     margin-bottom: 1em;
 }
 
+.control-settings {
+    width: 16em;
+}
+
 .temp {
     color: #ed8445;
     font-weight: bold;
@@ -208,8 +212,14 @@ a.btn {
     text-decoration: none;
 }
 
-a.btn.secondary {
+a.btn.cancel {
     color: #929598;
+    text-transform: lowercase;
+}
+
+a.btn.delete {
+    float: right;
+    text-transform: lowercase;
 }
 
 a.btn:hover {

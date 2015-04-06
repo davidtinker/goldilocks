@@ -41,6 +41,10 @@ var ControlSettings = React.createClass({
         if (this.props.onComplete) this.props.onComplete(false);
     },
 
+    onKeyDown: function(ev) {
+        if (ev.keyCode == 27) this.onCancel(ev);
+    },
+
     onDelete: function(ev) {
         ev.preventDefault();
         if (!window.confirm("Are you sure you want to delete this control?")) return;
@@ -63,10 +67,11 @@ var ControlSettings = React.createClass({
             return (<option value={p} key={p}>{p || 'None'}</option>)
         });
         return (
-            <form className="control-settings" onSubmit={this.onSubmit}>
+            <form className="control-settings" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
+                <h1>Control Settings</h1>
                 <label>
                     <span>Name</span>
-                    <input ref='name' defaultValue={c.name}/>
+                    <input ref='name' defaultValue={c.name} autoFocus="true"/>
                 </label>
                 <label>
                     <span>Temp Probe</span>
@@ -84,12 +89,9 @@ var ControlSettings = React.createClass({
                     </select>
                 </label>
                 <div className='actions'>
-                    <span/>
-                    <span>
-                        <input type='submit' value='Save'/>
-                        <a key='cancel' className="btn cancel" href="" onClick={this.onCancel}>Cancel</a>
-                        <a key='delete' className="btn delete" href="" onClick={this.onDelete}>Delete</a>
-                    </span>
+                    <input type='submit' value='Save'/>
+                    <a key='cancel' className="btn cancel" href="" onClick={this.onCancel}>Cancel</a>
+                    <a key='delete' className="btn delete" href="" onClick={this.onDelete}>Delete</a>
                 </div>
             </form>
         )

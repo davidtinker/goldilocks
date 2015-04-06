@@ -11,10 +11,6 @@ var TitleBar = React.createClass({
         ModalStore.push(<AppSettings onComplete={ModalStore.pop.bind(ModalStore)} app={this.props.app}/>);
     },
 
-    onSettingsComplete: function(ev) {
-        this.setState({showSettings: false})
-    },
-
     render: function() {
         return (
             <div className="title-bar">

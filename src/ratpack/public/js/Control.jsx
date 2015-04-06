@@ -1,5 +1,6 @@
 var React = require('react');
 var AppStore = require('./AppStore');
+var ModalStore = require('./ModalStore');
 var AppDispatcher = require('./AppDispatcher');
 
 var TempReading = require('./TempReading.jsx');
@@ -9,18 +10,13 @@ var TempSpinner = require('./TempSpinner.jsx');
 var Control = React.createClass({
 
     getInitialState: function() {
-        return {
-            showSettings: false,
-            pinState: this.props.control.pinState || 'off'
-        }
+        return { pinState: this.props.control.pinState || 'off' }
     },
 
     onToggleSettings: function(ev) {
-        this.setState({showSettings: !this.state.showSettings})
-    },
-
-    onSettingsComplete: function() {
-        this.setState({showSettings: false})
+        ModalStore.push(
+            <ControlSettings control={this.props.control} chart={this.props.chart} onComplete={ModalStore.pop.bind(ModalStore)}/>
+        );
     },
 
     onSubmit: function(ev) {
@@ -81,9 +77,6 @@ var Control = React.createClass({
                     : ''}
                 {tp}
                 {pf}
-                {this.state.showSettings
-                    ? <ControlSettings onComplete={this.onSettingsComplete} control={i} chart={this.props.chart}/>
-                    : ''}
             </div>
         )
     }
