@@ -37,12 +37,12 @@ var Control = React.createClass({
             var ps = i.pinState || 'off';
             var psl = ps.charAt(0).toUpperCase() + ps.substring(1);
             tf = (
-                <div onClick={this.onChangePinState} title="Click to change" className="clickable">
+                <div onClick={this.onChangePinState} title="Click to change" className={"clickable" + (heater ? ' heater' : '')}>
                     {ps != 'auto' ?
-                        <span>
+                        <div className='pin'>
                             <label>{heater ? 'Heater' : i.name}</label>
-                            <span className={"pin " + ps}>{psl}</span>
-                        </span>
+                            <span className={"value " + ps}>{psl}</span>
+                        </div>
                         : ''}
                     {heater && ps == 'auto'
                         ? <TempReading name={'Heater Target'} color={i.color + '-alt'} temp={i.targetTemp}/>

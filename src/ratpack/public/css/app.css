@@ -51,7 +51,7 @@ h1 {
 }
 
 .controls {
-    width: 25%;
+    width: 15%;
     display: table-cell;
     padding-left: 1em;
 }
@@ -59,7 +59,7 @@ h1 {
 .control {
     padding: 0.2em;
     background-color: #1f1f1f;
-    margin-bottom: 1em;
+    margin-bottom: 2em;
 }
 
 .control-settings {
@@ -74,17 +74,22 @@ h1 {
     margin-bottom: 0.5em;
 }
 
-.temp {
+.temp,
+.pin {
     font-weight: bold;
     text-align: center;
 }
 
-.temp label {
+.temp label,
+.pin label {
     display: block;
+    font-variant: small-caps;
 }
 
-.temp .value {
+.temp .value,
+.pin .value {
     font-size: 300%;
+    text-transform: uppercase;
 }
 
 .temp.orange { color: #ed8445 }
@@ -92,6 +97,10 @@ h1 {
 
 .temp.blue { color: #72d0df }
 .temp.blue-alt { color: #7fb170 }
+
+.heater {
+    margin-top: 1em;
+}
 
 .app-settings {
     width: 16em;

@@ -8,11 +8,12 @@ var TempReading = React.createClass({
         var s;
         if (temp) {
             if (fahrenheit) temp = temp * 9 / 5 + 32;
-            s = Math.round(temp * 10) / 10;
+            s = '' + Math.round(temp * 10) / 10;
+            if (s.indexOf('.') < 0) s += '.0';
         } else {
             s = '?';
         }
-        s += " \u00B0" + (fahrenheit ? 'F' : 'C');
+        if (this.props.showUnits) s += " \u00B0" + (fahrenheit ? 'F' : 'C');
         return (
             <div className={"temp " + this.props.color}>
                 <label>{this.props.name}</label>
