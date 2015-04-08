@@ -90,9 +90,17 @@ h1 {
     opacity: 0.9;
 }
 
-.temp .value,
+.temp .value {
+    font-size: 350%;
+    text-transform: uppercase;
+}
+
+.pin label {
+}
+
+.heater .temp .value,
 .pin .value {
-    font-size: 300%;
+    font-size: 250%;
     text-transform: uppercase;
 }
 
@@ -138,9 +146,6 @@ h1 {
     -webkit-border-radius: 0.5em;
     -moz-border-radius: 0.5em;
     border-radius: 0.5em;
-    /*-webkit-box-shadow: 0px 0px 16px 0px rgba(233,183,70,1);*/
-    /*-moz-box-shadow: 0px 0px 16px 0px rgba(233,183,70,1);*/
-    /*box-shadow: 0px 0px 16px 0px rgba(233,183,70,1);*/
 }
 
 form.heater {

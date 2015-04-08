@@ -7,29 +7,38 @@ var ChartHistoryStore = require("./ChartHistoryStore");
 var TempGraph = React.createClass({
 
     getInitialState: function() {
-        return { controls: ChartHistoryStore.get(this.props.chart.id) || [] }
+        return {
+            controls: ChartHistoryStore.get(this.props.chart.id) || [],
+            oink: Math.random()
+        }
     },
 
     render: function() {
-        console.log("render");
+        console.log("render " + this.state.controls.length);
         return (<div className="temp-graph"></div>);
     },
 
     componentDidMount: function() {
-        console.log("componentDidMount");
-        this._changeListener = function(){ this.setState({controls: ChartHistoryStore.get(this.props.chart.id)}); }.bind(this);
+        console.log("componentDidMount " + this.state.controls.length);
+        this._changeListener = function(){
+            var controls = ChartHistoryStore.get(this.props.chart.id);
+            console.log("change " + controls.length);
+            this.setState({controls: controls, oink: Math.random()});
+        }.bind(this);
         ChartHistoryStore.addChangeListener(this._changeListener);
         AppDispatcher.dispatch({type: 'refresh-chart-history', id: this.props.chart.id});
-        createChart(this.getDOMNode(), this.props, this.state.controls);
+        //createChart(this.getDOMNode(), this.props, this.state.controls);
     },
 
     componentWillUnmount: function() {
+        console.log("componentWillUnmount");
         ChartHistoryStore.removeChangeListener(this._changeListener);
     },
 
     shouldComponentUpdate: function() {
-        console.log("shouldComponentUpdate");
-        createChart(this.getDOMNode(), this.props, this.state.controls);
+        console.log("shouldComponentUpdate " + this.state.controls.length);
+        // for some reason the state doesn't always contain stuff from the latest change event??
+        createChart(this.getDOMNode(), this.props, ChartHistoryStore.get(this.props.chart.id));
         return false;
     }
 });

@@ -18,6 +18,7 @@ var ChartHistoryStore = assign({}, EventEmitter.prototype, {
 AppDispatcher.register(function(action) {
     switch(action.type) {
         case 'refresh-chart-history':
+            console.log("refresh-chart-history");
             $.getJSON('/rest/app/charts/' + action.id + "/history", function(data) {
                 map[action.id] = data;
                 ChartHistoryStore.emitChange();
