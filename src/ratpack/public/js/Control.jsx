@@ -27,7 +27,7 @@ var Control = React.createClass({
 
         var tp;
         if (i.tempProbe) tp = (
-            <div onClick={this.onChangeSettings} title="Click to configure">
+            <div onClick={this.onChangeSettings} title="Click to configure" className="clickable">
                 <TempReading name={i.name || 'Temp'} color={i.color} temp={i.temp}/>
             </div>
         );

@@ -56,7 +56,7 @@ class TempLogRepo {
     /**
      * List recorded measurements for the probe and date range,
      */
-    List<Record> list(String traceId, Date start, Date end, boolean fahrenheit) {
+    List<Record> list(String traceId, Date start, Date end) {
         List<Record> ans = []
         GregorianCalendar gc = new GregorianCalendar()
         gc.time = start
@@ -74,8 +74,7 @@ class TempLogRepo {
                     def date = gc.time
                     if (date.before(start)) continue
                     if (date.after(end)) break
-                    def c = Double.parseDouble(line.substring(9))
-                    ans << new Record(date.time, fahrenheit ? Util.toFahrenheit(c) : c)
+                    ans << new Record(date.time, Double.parseDouble(line.substring(9)))
                 }
             }
             gc.add(Calendar.DAY_OF_YEAR, 1)

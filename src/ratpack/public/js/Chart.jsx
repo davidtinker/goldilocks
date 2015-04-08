@@ -2,7 +2,7 @@ var React = require('react');
 var AppDispatcher = require('./AppDispatcher');
 
 var Control = require('./Control.jsx');
-var Graph = require('./Graph.jsx');
+var TempGraph = require('./TempGraph.jsx');
 
 var Chart = React.createClass({
 
@@ -19,7 +19,7 @@ var Chart = React.createClass({
         return (
             <div className="chart">
                 <div className="inner">
-                    <Graph chart={chart}/>
+                    <TempGraph chart={chart}/>
                     <div className="controls">
                         {controlNodes}
                         <div>

@@ -79,25 +79,26 @@ ratpack {
                     }
                 }
 
+                get("charts/:cid/history") {
+                    def chart = app.state.findChart(Integer.parseInt(pathTokens['cid']))
+                    def tr = registry.get(TempLogRepo)
+                    GregorianCalendar gc = new GregorianCalendar()
+                    gc.add(Calendar.HOUR_OF_DAY, -2)
+                    def ago = gc.time
+                    def now = new Date()
+                    def ans = chart.controls.findAll { it.tempProbe }.collect { c ->
+                        def dto = [id: c.id, name: c.name, color: c.color]
+                        if (c.tempProbe) dto.tempProbe = tr.list(c.tempProbe, ago, now)
+                        if (c.pin) dto.targetTemp = tr.list("target-" + c.pin, ago, now)
+                        return dto
+                    }
+                    render(json(ans))
+                }
             }
 
             get("pi") {
                 def pi = registry.get(RaspberryPi)
                 render(json([tempProbes: pi.tempProbes, pins: pi.pins]))
-            }
-
-            get("vessel/:id/history") {
-                def vid = Integer.parseInt(pathTokens['id'])
-                def v = app.state.charts.find { it.id == vid }
-                def tr = registry.get(TempLogRepo)
-                def ans = [:]
-                GregorianCalendar gc = new GregorianCalendar()
-                gc.add(Calendar.HOUR_OF_DAY, -2)
-                def ago = gc.time
-                def now = new Date()
-                if (v.tempProbe) ans.tempProbe = tr.list(v.tempProbe, ago, now, app.state.fahrenheit)
-                if (v.heaterPin) ans.targetTemp = tr.list("target-" + v.heaterPin, ago, now, app.state.fahrenheit)
-                render(json(ans))
             }
         }
 
