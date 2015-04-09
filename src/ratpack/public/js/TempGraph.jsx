@@ -7,36 +7,27 @@ var ChartHistoryStore = require("./ChartHistoryStore");
 var TempGraph = React.createClass({
 
     getInitialState: function() {
-        return {
-            controls: ChartHistoryStore.get(this.props.chart.id) || [],
-            oink: Math.random()
-        }
+        return { controls: ChartHistoryStore.get(this.props.chart.id) || [] }
     },
 
     render: function() {
-        console.log("render " + this.state.controls.length);
-        return (<div className="temp-graph"></div>);
+        return (<div className="temp-graph" onClick={this.props.onClick}></div>);
     },
 
     componentDidMount: function() {
-        console.log("componentDidMount " + this.state.controls.length);
         this._changeListener = function(){
             var controls = ChartHistoryStore.get(this.props.chart.id);
-            console.log("change " + controls.length);
-            this.setState({controls: controls, oink: Math.random()});
+            this.setState({controls: controls || []});
         }.bind(this);
         ChartHistoryStore.addChangeListener(this._changeListener);
         AppDispatcher.dispatch({type: 'refresh-chart-history', id: this.props.chart.id});
-        //createChart(this.getDOMNode(), this.props, this.state.controls);
     },
 
     componentWillUnmount: function() {
-        console.log("componentWillUnmount");
         ChartHistoryStore.removeChangeListener(this._changeListener);
     },
 
     shouldComponentUpdate: function() {
-        console.log("shouldComponentUpdate " + this.state.controls.length);
         // for some reason the state doesn't always contain stuff from the latest change event??
         createChart(this.getDOMNode(), this.props, ChartHistoryStore.get(this.props.chart.id));
         return false;
@@ -75,8 +66,8 @@ function createChart(el, props, data) {
     }
 
     var margin = {top: 10, right: 20, bottom: 20, left: 40},
-        width = 320 - margin.left - margin.right,
-        height = 200 - margin.top - margin.bottom;
+        width = el.offsetWidth - margin.left - margin.right,
+        height = el.offsetHeight - margin.top - margin.bottom;
 
     var timeFormat = d3.time.format.multi([
         ["%M", function(d) { return d.getMinutes(); }],
@@ -99,16 +90,13 @@ function createChart(el, props, data) {
     x.domain(e);
 
     e = lines.length > 0 ? widestExtent(lines, tempFn) : [67, 67];
-    if (e[1] - e[0] < 5) {
-        var avg = (e[0] + e[1]) / 2;
-        e[0] = avg - 2.5;
-        e[1] = avg + 2.5;
-    }
+    e[0] -= 2;
+    e[1] += 2;
     y.domain(e);
 
     var xfn = function(d) { return x(d.date) };
     var yfn = function(d) { return y(d.temp) };
-    var probeLine = d3.svg.line().interpolate("monotone").x(xfn).y(yfn);
+    var probeLine = d3.svg.line().interpolate("basis").x(xfn).y(yfn);
     var targetLine = d3.svg.line().interpolate("step-before").x(xfn).y(yfn);
 
     svg.append("g")

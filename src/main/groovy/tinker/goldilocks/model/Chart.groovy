@@ -3,6 +3,7 @@ package tinker.goldilocks.model
 class Chart {
 
     int id
+    Integer minutes
     List<Control> controls = []
 
     Control findControl(Integer itemId) {

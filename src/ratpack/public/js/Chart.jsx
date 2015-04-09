@@ -1,14 +1,17 @@
 var React = require('react');
 var AppDispatcher = require('./AppDispatcher');
 
+var ModalStore = require('./ModalStore');
 var Control = require('./Control.jsx');
 var TempGraph = require('./TempGraph.jsx');
+var ChartSettings = require('./ChartSettings.jsx');
 
 var Chart = React.createClass({
 
-    onAddControl: function(ev) {
-        ev.preventDefault();
-        AppDispatcher.dispatch({type: 'add-control', id: {chartId: this.props.chart.id}});
+    onChangeSettings: function(ev) {
+        ModalStore.push(
+            <ChartSettings chart={this.props.chart} onComplete={ModalStore.pop.bind(ModalStore)}/>
+        );
     },
 
     render: function() {
@@ -19,13 +22,8 @@ var Chart = React.createClass({
         return (
             <div className="chart">
                 <div className="inner">
-                    <TempGraph chart={chart}/>
-                    <div className="controls">
-                        {controlNodes}
-                        <div>
-                            <a href="" className="btn" onClick={this.onAddControl}>Add Control</a>
-                        </div>
-                    </div>
+                    <TempGraph chart={chart} onClick={this.onChangeSettings}/>
+                    <div className="controls">{controlNodes}</div>
                 </div>
             </div>
         )

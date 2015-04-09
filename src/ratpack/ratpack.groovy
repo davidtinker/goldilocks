@@ -13,6 +13,7 @@ import tinker.goldilocks.model.AppState
 import tinker.goldilocks.model.Chart
 import tinker.goldilocks.model.Control
 
+import static ratpack.groovy.Groovy.context
 import static ratpack.groovy.Groovy.groovyTemplate
 import static ratpack.groovy.Groovy.ratpack
 import static ratpack.jackson.Jackson.fromJson
@@ -55,10 +56,17 @@ ratpack {
                     render(json(app.addChart()))
                 }
 
-                put("charts/:id") {
-                    Chart chart = parse(fromJson(Chart))
-                    chart.id = Integer.parseInt(pathTokens['id'])
-                    render(json(app.updateChart(chart)))
+                handler("charts/:id") {
+                    context.byMethod {
+                        put {
+                            Chart chart = parse(fromJson(Chart))
+                            chart.id = Integer.parseInt(pathTokens['id'])
+                            render(json(app.updateChart(chart)))
+                        }
+                        delete {
+                            render(json(app.deleteChart(Integer.parseInt(pathTokens['id']))))
+                        }
+                    }
                 }
 
                 post("charts/:id/controls") {

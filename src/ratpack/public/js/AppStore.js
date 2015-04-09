@@ -30,12 +30,20 @@ AppDispatcher.register(function(action) {
             $.getJSON('/rest/app', updateApp);
             break;
 
+        case 'update-settings':
+            put('/rest/app', action.data).success(updateApp);
+            break;
+
         case 'add-chart':
             $.post('/rest/app/charts', updateApp);
             break;
 
-        case 'update-settings':
-            put('/rest/app', action.data).success(updateApp);
+        case 'update-chart':
+            put('/rest/app/charts/' + action.id, action.data).success(updateApp);
+            break;
+
+        case 'delete-chart':
+            $.ajax({type: "DELETE", url: '/rest/app/charts/' + action.id}).success(updateApp);
             break;
 
         case 'add-control':

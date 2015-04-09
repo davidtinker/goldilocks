@@ -21,11 +21,6 @@ var Goldilocks = React.createClass({
         clearInterval(this._interval);
     },
 
-    onAddChart: function(ev) {
-        ev.preventDefault();
-        AppDispatcher.dispatch({type: 'add-chart'});
-    },
-
     render: function() {
         if (!this.state) return (<div></div>);
         var chartNodes = this.state.charts.map(function(chart){
@@ -35,7 +30,6 @@ var Goldilocks = React.createClass({
             <div>
                 <TitleBar app={this.state}/>
                 {chartNodes}
-                <a href="" className="btn" onClick={this.onAddChart}>Add Chart</a>
                 <ModalStack/>
             </div>
         )

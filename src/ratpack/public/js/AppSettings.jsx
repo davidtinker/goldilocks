@@ -16,6 +16,11 @@ var AppSettings = React.createClass({
         if (this.props.onComplete) this.props.onComplete(true);
     },
 
+    onAddChart: function(ev) {
+        ev.preventDefault();
+        AppDispatcher.dispatch({type: 'add-chart'});
+    },
+
     onCancel: function(ev) {
         ev.preventDefault();
         if (this.props.onComplete) this.props.onComplete(false);
@@ -40,9 +45,13 @@ var AppSettings = React.createClass({
                         <option value='true'>Fahrenheit</option>
                     </select>
                 </label>
+                <label>
+                    <span>&nbsp;</span>
+                    <button className="add" onClick={this.onAddChart}>Add Chart</button>
+                </label>
                 <div className='actions'>
                     <input type='submit' value='Save'/>
-                    <a href="" className="btn cancel" onClick={this.onCancel}>cancel</a>
+                    <a className="btn cancel" onClick={this.onCancel}>cancel</a>
                 </div>
             </form>
         )

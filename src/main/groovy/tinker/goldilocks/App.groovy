@@ -75,15 +75,14 @@ class App {
     synchronized AppState updateChart(Chart n) {
         setupRepo.update { AppState s ->
             Chart c = s.findChart(n.id);
+            if (n.minutes != null) c.minutes = n.minutes
         }
         return refreshState()
     }
 
     synchronized AppState deleteChart(Integer chartId) {
         setupRepo.update { AppState s ->
-            def c = s.findChart(chartId)
-            if (c.controls) throw new IllegalArgumentException("Chart ${chartId} still has items")
-            s.charts.remove(c)
+            s.charts.remove(s.findChart(chartId))
         }
         return refreshState()
     }

@@ -90,8 +90,8 @@ var ControlSettings = React.createClass({
                 </label>
                 <div className='actions'>
                     <input type='submit' value='Save'/>
-                    <a key='cancel' className="btn cancel" href="" onClick={this.onCancel}>Cancel</a>
-                    <a key='delete' className="btn delete" href="" onClick={this.onDelete}>Delete</a>
+                    <a key='cancel' className="btn cancel" onClick={this.onCancel}>Cancel</a>
+                    <a key='delete' className="btn delete" onClick={this.onDelete}>Delete</a>
                 </div>
             </form>
         )

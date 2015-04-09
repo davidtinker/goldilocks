@@ -50,6 +50,7 @@ h1 {
     background-color: #1f1f1f;
     width: 80%;
     height: 20em;
+    cursor: pointer;
 }
 
 .controls {
@@ -158,7 +159,7 @@ form.heater {
 
 text {
     fill: #bbbfc2;
-    font-size: 12px;
+    font-size: 120%;
 }
 
 .axis path,
@@ -199,7 +200,8 @@ form > label span:first-child {
     padding: 0.5em 0.4em 0.5em 0;
 }
 
-form > label > input {
+form > label > input,
+form > label > button {
     display: table-cell;
 }
 
@@ -218,11 +220,15 @@ form .actions a {
 a.btn {
     color: #bbbfc2;
     text-decoration: none;
+    cursor: pointer;
 }
 
 a.btn.cancel {
     color: #929598;
     text-transform: lowercase;
+}
+
+button.add {
 }
 
 a.btn.delete {
@@ -234,6 +240,3 @@ a.btn:hover {
     color: #fff;
 }
 
-input.delete {
-    float: right;
-}
