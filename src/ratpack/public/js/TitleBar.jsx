@@ -14,11 +14,13 @@ var TitleBar = React.createClass({
     render: function() {
         return (
             <div className="title-bar">
-                <Clock time={this.props.app.updated}/>
-                <div className="clickable" onClick={this.onTitleClick} title="Click to change settings">
-                    <span className="brand">Golidlocks&deg;{this.props.app.fahrenheit ? 'F' : 'C'}</span>
-                    <span className="title">{this.props.app.title}</span>
+                <div className="inner">
+                    <div className="clickable" onClick={this.onTitleClick} title="Click to change settings">
+                        <span className="brand">Golidlocks&deg;{this.props.app.fahrenheit ? 'F' : 'C'}</span>
+                        <span className="title">{this.props.app.title}</span>
+                    </div>
                 </div>
+                <Clock time={this.props.app.updated}/>
             </div>
         )
     }

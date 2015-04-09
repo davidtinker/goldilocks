@@ -4,5 +4,5 @@ var Goldilocks = require('./Goldilocks.jsx');
 
 React.render(
     <Goldilocks />,
-    document.getElementById('app')
+    document.body
 );

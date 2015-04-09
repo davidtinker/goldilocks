@@ -21,10 +21,8 @@ var Chart = React.createClass({
         });
         return (
             <div className="chart">
-                <div className="inner">
-                    <TempGraph chart={chart} onClick={this.onChangeSettings}/>
-                    <div className="controls">{controlNodes}</div>
-                </div>
+                <TempGraph chart={chart} onClick={this.onChangeSettings}/>
+                <div className="controls">{controlNodes}</div>
             </div>
         )
     }

@@ -27,7 +27,7 @@ var Goldilocks = React.createClass({
             return (<Chart chart={chart} key={chart.id}/>)
         });
         return (
-            <div>
+            <div className="root">
                 <TitleBar app={this.state}/>
                 {chartNodes}
                 <ModalStack/>
