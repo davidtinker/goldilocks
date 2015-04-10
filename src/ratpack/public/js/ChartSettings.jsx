@@ -46,6 +46,7 @@ var ChartSettings = React.createClass({
                 <label>
                     <span>Time Span</span>
                     <select ref='minutes' defaultValue={c.minutes} autoFocus='true'>
+                        <option value='30'>30m</option>
                         <option value='60'>1h</option>
                         <option value='90'>1.5h</option>
                         <option value='120'>2h</option>

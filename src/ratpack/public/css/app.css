@@ -178,11 +178,11 @@ text {
 .axis line {
     fill: none;
     stroke: #444444;
-    shape-rendering: crispEdges;
+    /*shape-rendering: crispEdges;*/
 }
 
 .domain {
-    display: none;
+    /*display: none;*/
 }
 
 .x.axis path {

@@ -9,8 +9,13 @@ var ModalStack = require('./ModalStack.jsx');
 
 var Goldilocks = React.createClass({
 
+    getInitialState: function() {
+        return {app: { charts: [] }}
+    },
+
     componentDidMount: function() {
-        AppStore.addChangeListener(this._changeListener = function(){ this.setState(AppStore.getApp()); }.bind(this));
+        window.addEventListener("resize", this.updateDimensions);
+        AppStore.addChangeListener(this._changeListener = function(){ this.setState({app: AppStore.getApp() })}.bind(this));
         AppDispatcher.dispatch({type: 'refresh'});
         AppDispatcher.dispatch({type: 'refresh-pi'});
         //this._interval = setInterval(function() { AppDispatcher.dispatch({type: 'refresh'}) }, 1000);
@@ -19,16 +24,25 @@ var Goldilocks = React.createClass({
     componentWillUnmount: function() {
         AppStore.removeChangeListener(this._changeListener);
         clearInterval(this._interval);
+        window.removeEventListener("resize", this.updateDimensions);
+    },
+
+    componentWillMount: function() {
+        this.updateDimensions();
+    },
+
+    updateDimensions: function() {
+        this.setState({width: window.width, height: window.height});
     },
 
     render: function() {
         if (!this.state) return (<div></div>);
-        var chartNodes = this.state.charts.map(function(chart){
+        var chartNodes = this.state.app.charts.map(function(chart){
             return (<Chart chart={chart} key={chart.id}/>)
         });
         return (
             <div className="root">
-                <TitleBar app={this.state}/>
+                <TitleBar app={this.state.app}/>
                 {chartNodes}
                 <ModalStack/>
             </div>

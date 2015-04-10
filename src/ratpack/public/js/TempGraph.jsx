@@ -2,6 +2,7 @@ var React = require('react');
 var d3 = require("d3");
 
 var AppDispatcher = require('./AppDispatcher');
+var AppStore = require("./AppStore");
 var ChartHistoryStore = require("./ChartHistoryStore");
 
 var TempGraph = React.createClass({
@@ -15,22 +16,27 @@ var TempGraph = React.createClass({
     },
 
     componentDidMount: function() {
+        console.log("TempGraph componentDidMount");
         this._changeListener = function(){
             var controls = ChartHistoryStore.get(this.props.chart.id);
             this.setState({controls: controls || []});
         }.bind(this);
         ChartHistoryStore.addChangeListener(this._changeListener);
         AppDispatcher.dispatch({type: 'refresh-chart-history', id: this.props.chart.id});
+        this.renderChart();
     },
 
     componentWillUnmount: function() {
         ChartHistoryStore.removeChangeListener(this._changeListener);
     },
 
-    shouldComponentUpdate: function() {
-        // for some reason the state doesn't always contain stuff from the latest change event??
+    componentDidUpdate: function() {
+        console.log("TempGraph componentDidUpdate");
+        this.renderChart();
+    },
+
+    renderChart: function() {
         createChart(this.getDOMNode(), this.props, ChartHistoryStore.get(this.props.chart.id));
-        return false;
     }
 });
 
@@ -53,15 +59,17 @@ function createChart(el, props, data) {
     d3.select(el).selectAll("svg").remove();
     if (!data) return;
 
-    // flatten the line(s) for each control into a array of just lines
+    var fahrenheit = AppStore.getApp().fahrenheit;
+
+    // flatten the line(s) for each control into a array of just lines + do c to f conversion if needed
     var lines = [], i, j, c;
     for (i = 0; i < data.length; i++) {
         c = data[i];
         if (c.tempProbe && c.tempProbe.length > 0) {
-            lines.push({type: 'tempProbe', color: c.color, data: c.tempProbe });
+            lines.push({type: 'tempProbe', color: c.color, data: fixTemp(c.tempProbe, fahrenheit) });
         }
         if (c.targetTemp && c.targetTemp.length > 0) {
-            lines.push({type: 'targetTemp', color: c.color + "-alt", data: c.targetTemp })
+            lines.push({type: 'targetTemp', color: c.color + "-alt", data: fixTemp(c.targetTemp, fahrenheit) })
         }
     }
 
@@ -85,8 +93,10 @@ function createChart(el, props, data) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    var mins = props.chart.minutes || 60;
+
     var e = lines.length > 0 ? widestExtent(lines, dateFn) : [0, new Date().time];
-    if (!e[0] || e[1] - e[0] < 60 * 60 * 1000) e[0] = e[1] - 60 * 60 * 1000;
+    if (!e[0] || e[1] - e[0] < mins * 60 * 1000) e[0] = e[1] - mins * 60 * 1000;
     x.domain(e);
 
     e = lines.length > 0 ? widestExtent(lines, tempFn) : [67, 67];
@@ -130,4 +140,14 @@ function createChart(el, props, data) {
                 .attr("d", probeLine);
         }
     }
+}
+
+function fixTemp(a, fahrenheit) {
+    if (!fahrenheit) return a;
+    var ans = [];
+    for (var i = 0; i < a.length; i++) {
+        var e = a[i];
+        ans.push({date: e.date, temp: e.temp * 9 / 5 + 32})
+    }
+    return ans;
 }
