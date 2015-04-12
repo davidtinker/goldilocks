@@ -16,7 +16,7 @@ var TitleBar = React.createClass({
             <div className="title-bar">
                 <div className="inner">
                     <div className="clickable" onClick={this.onTitleClick} title="Click to change settings">
-                        <span className="brand">Golidlocks&deg;{this.props.app.fahrenheit ? 'F' : 'C'}</span>
+                        <span className="brand">Goldilocks&deg;{this.props.app.fahrenheit ? 'F' : 'C'}</span>
                         <span className="title">{this.props.app.title}</span>
                     </div>
                 </div>
