@@ -32,7 +32,11 @@ class SetupRepo {
      * Load configuration from our file. Returns new empty configuration if the file does not exist.
      */
     synchronized AppState load() {
-        if (!file.exists()) return new AppState()
+        if (!file.exists()) {
+            def ans = new AppState()
+            ans.addChart()
+            return ans
+        }
         return objectMapper.readValue(file, AppState)
     }
 

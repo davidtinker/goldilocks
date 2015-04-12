@@ -45,16 +45,16 @@ var AppSettings = React.createClass({
                         <option value='true'>Fahrenheit</option>
                     </select>
                 </label>
-                <label>
-                    <span>&nbsp;</span>
-                    <button className="add" onClick={this.onAddChart}>Add Chart</button>
-                </label>
                 <div className='actions'>
                     <input type='submit' value='Save'/>
                     <a className="btn cancel" onClick={this.onCancel}>cancel</a>
                 </div>
             </form>
         )
+            //<label>
+            //<span>&nbsp;</span>
+            //<button className="add" onClick={this.onAddChart}>Add Chart</button>
+            //</label>
     }
 });
 

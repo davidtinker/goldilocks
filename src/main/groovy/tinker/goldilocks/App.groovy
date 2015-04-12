@@ -120,6 +120,7 @@ class App {
         List<Callable> jobs = []
         state.charts.each { c ->
             c.controls.each { i ->
+                i.errors = []
                 if (i.tempProbe) jobs << {
                     try {
                         i.temp = pi.readTemp(i.tempProbe)

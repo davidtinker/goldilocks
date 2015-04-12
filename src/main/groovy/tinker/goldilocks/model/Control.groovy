@@ -20,7 +20,7 @@ class Control {
     String pinState       // off, auto, on
 
     transient Double temp
-    transient List<String> errors = []
+    transient List<String> errors
 
     boolean empty() { !name && !tempProbe && !pin }
 }
