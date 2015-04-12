@@ -17,16 +17,26 @@ var TempGraph = React.createClass({
 
     componentDidMount: function() {
         console.log("TempGraph componentDidMount");
+
         this._changeListener = function(){
-            var controls = ChartHistoryStore.get(this.props.chart.id);
-            this.setState({controls: controls || []});
+            this.setState({controls: ChartHistoryStore.get(this.props.chart.id) || []});
         }.bind(this);
         ChartHistoryStore.addChangeListener(this._changeListener);
-        AppDispatcher.dispatch({type: 'refresh-chart-history', id: this.props.chart.id});
+
+        AppStore.addChangeListener(this._appChangeListener = function() {
+            AppDispatcher.dispatch({
+                type: 'refresh-chart-history',
+                id: this.props.chart.id,
+                minutes: this.props.chart.minutes
+            });
+        }.bind(this));
+        this._appChangeListener();
+
         this.renderChart();
     },
 
     componentWillUnmount: function() {
+        AppStore.removeChangeListener(this._appChangeListener);
         ChartHistoryStore.removeChangeListener(this._changeListener);
     },
 
@@ -84,8 +94,9 @@ function createChart(el, props, data) {
 
     var x = d3.time.scale().range([0, width]);
     var y = d3.scale.linear().range([height, 0]).nice();
-    var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(10).tickSize(-height).tickFormat(timeFormat);
-    var yAxis = d3.svg.axis().scale(y).orient("left").tickSize(-width);
+    var xAxis = d3.svg.axis().scale(x).orient("bottom").tickPadding(9).ticks(10).tickSize(-height).tickFormat(timeFormat);
+    var yAxis = d3.svg.axis().scale(y).orient("left").tickPadding(6).tickSize(-width);
+    var y2Axis = d3.svg.axis().scale(y).orient("right").tickFormat('');
 
     var svg = d3.select(el).append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -100,8 +111,8 @@ function createChart(el, props, data) {
     x.domain(e);
 
     e = lines.length > 0 ? widestExtent(lines, tempFn) : [67, 67];
-    e[0] -= 2;
-    e[1] += 2;
+    e[0] = Math.floor(e[0] - 2);
+    e[1] = Math.floor(e[1] + 2 + 0.5);
     y.domain(e);
 
     var xfn = function(d) { return x(d.date) };
@@ -117,6 +128,11 @@ function createChart(el, props, data) {
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis);
+
+    svg.append("g")
+        .attr("class", "y2 axis")
+        .attr("transform", "translate(" + width + " ,0)")
+        .call(y2Axis);
 
     for (i = 0; i < lines.length; i++) {
         var line = lines[i];

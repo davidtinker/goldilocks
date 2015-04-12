@@ -90,8 +90,9 @@ ratpack {
                 get("charts/:cid/history") {
                     def chart = app.state.findChart(Integer.parseInt(pathTokens['cid']))
                     def tr = registry.get(TempLogRepo)
+                    int minutes = request.queryParams.minutes as Integer ?: 60
                     GregorianCalendar gc = new GregorianCalendar()
-                    gc.add(Calendar.HOUR_OF_DAY, -2)
+                    gc.add(Calendar.MINUTE, -minutes)
                     def ago = gc.time
                     def now = new Date()
                     def ans = chart.controls.findAll { it.tempProbe }.collect { c ->

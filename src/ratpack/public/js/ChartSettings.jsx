@@ -52,6 +52,8 @@ var ChartSettings = React.createClass({
                         <option value='120'>2h</option>
                         <option value='180'>3h</option>
                         <option value='240'>4h</option>
+                        <option value='480'>8h</option>
+                        <option value='1440'>24h</option>
                     </select>
                 </label>
                 <label>

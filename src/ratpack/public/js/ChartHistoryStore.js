@@ -19,7 +19,7 @@ AppDispatcher.register(function(action) {
     switch(action.type) {
         case 'refresh-chart-history':
             console.log("refresh-chart-history");
-            $.getJSON('/rest/app/charts/' + action.id + "/history", function(data) {
+            $.getJSON('/rest/app/charts/' + action.id + "/history?minutes=" + (action.minutes || 60), function(data) {
                 map[action.id] = data;
                 ChartHistoryStore.emitChange();
             });

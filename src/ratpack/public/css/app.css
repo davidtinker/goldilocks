@@ -29,19 +29,21 @@ h1 {
 
 .title-bar {
     display: table-row;
-    font-size: 120%;
-    font-weight: bold;
 }
 
 .title-bar .inner {
     display: table-cell;
     padding: 0.6em 1em 0;
+    font-size: 150%;
+    font-weight: bold;
 }
 
 .title-bar .clock {
     display: table-cell;
-    width: 15%;
+    width: 8em;
     text-align: center;
+    font-size: 150%;
+    font-weight: bold;
 }
 
 .brand {
@@ -63,12 +65,12 @@ h1 {
     display: table-cell;
     height: 100%;
     vertical-align: top;
-    width: 85%;
+    /*width: 85%;*/
     cursor: pointer;
 }
 
 .controls {
-    width: 15%;
+    width: 10em;
     display: table-cell;
     padding-top: 3em;
 }
@@ -171,7 +173,7 @@ form.heater {
 
 text {
     fill: #bbbfc2;
-    font-size: 120%;
+    font-size: 140%;
 }
 
 .axis path,

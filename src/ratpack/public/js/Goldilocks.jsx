@@ -18,7 +18,9 @@ var Goldilocks = React.createClass({
         AppStore.addChangeListener(this._changeListener = function(){ this.setState({app: AppStore.getApp() })}.bind(this));
         AppDispatcher.dispatch({type: 'refresh'});
         AppDispatcher.dispatch({type: 'refresh-pi'});
-        //this._interval = setInterval(function() { AppDispatcher.dispatch({type: 'refresh'}) }, 1000);
+        this._interval = setInterval(function() {
+            AppDispatcher.dispatch({type: 'refresh'});
+        }.bind(this), 10000);
     },
 
     componentWillUnmount: function() {
