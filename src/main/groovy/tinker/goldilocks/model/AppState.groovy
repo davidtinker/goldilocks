@@ -12,8 +12,8 @@ class AppState {
 
     String title
     List<Chart> charts = []
-
     Boolean fahrenheit
+    Date timerExpires
 
     transient Date updated
 

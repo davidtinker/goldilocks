@@ -44,6 +44,7 @@ var Goldilocks = React.createClass({
         });
         return (
             <div className="root">
+                <div className='padder'>&nbsp;</div>
                 <TitleBar app={this.state.app}/>
                 {chartNodes}
                 <ModalStack/>

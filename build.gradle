@@ -28,3 +28,10 @@ dependencies {
 run {
 //    debug true
 }
+
+task buildUI(type:Exec) {
+    workingDir 'src/ratpack/public'
+    commandLine 'npm', 'run', 'build'
+}
+
+tasks.shadowJar.dependsOn(buildUI)

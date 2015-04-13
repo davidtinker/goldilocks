@@ -3,6 +3,7 @@ var React = require('react');
 var ModalStore = require('./ModalStore');
 
 var Clock = require('./Clock.jsx');
+var Timer = require('./Timer.jsx');
 var AppSettings = require('./AppSettings.jsx');
 
 var TitleBar = React.createClass({
@@ -15,7 +16,8 @@ var TitleBar = React.createClass({
         return (
             <div className="title-bar">
                 <div className="inner">
-                    <div className="clickable" onClick={this.onTitleClick} title="Click to change settings">
+                    <Timer timerExpires={this.props.app.timerExpires}/>
+                    <div className="brand-title" onClick={this.onTitleClick} title="Click to change settings">
                         <span className="brand">Goldilocks&deg;{this.props.app.fahrenheit ? 'F' : 'C'}</span>
                         <span className="title">{this.props.app.title}</span>
                     </div>

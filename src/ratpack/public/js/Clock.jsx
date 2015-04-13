@@ -18,7 +18,7 @@ var Clock = React.createClass({
     },
 
     render: function() {
-        var t = this.state.time.format('h:mm:ss A');
+        var t = this.state.time.format('h:mm:ss');
         return (<div className="clock">{t}</div>)
     }
 });

@@ -83,7 +83,7 @@ function createChart(el, props, data) {
         }
     }
 
-    var margin = {top: 30, right: 0, bottom: 40, left: 60},
+    var margin = {top: 10, right: 0, bottom: 40, left: 60},
         width = el.offsetWidth - margin.left - margin.right,
         height = el.offsetHeight - margin.top - margin.bottom;
 

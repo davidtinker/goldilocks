@@ -27,29 +27,51 @@ h1 {
     width: 100%;
 }
 
+.padder {
+    display: table-row;
+}
+
 .title-bar {
     display: table-row;
+    position: relative;
 }
 
 .title-bar .inner {
     display: table-cell;
-    padding: 0.6em 1em 0;
-    font-size: 150%;
+    padding-left: 2em;
+    padding-bottom: 0.3em;
     font-weight: bold;
+    position: relative;
+    vertical-align: top;
 }
 
-.title-bar .clock {
-    display: table-cell;
-    width: 8em;
-    text-align: center;
-    font-size: 150%;
-    font-weight: bold;
+.title-bar .brand-title {
+    line-height: 300%;
 }
 
 .brand {
     color: #e9b746;
     float: left;
     padding-right: 1em;
+    font-size: 150%;
+}
+
+.title-bar .title {
+    font-size: 150%;
+}
+
+.clock {
+    display: table-cell;
+    width: 5em;
+    text-align: center;
+    font-size: 250%;
+    font-weight: bold;
+}
+
+.timer {
+    padding-right: 1em;
+    float: right;
+    font-size: 250%;
 }
 
 .chart-wrapper {
@@ -137,6 +159,10 @@ h1 {
 
 .app-settings {
     width: 16em;
+}
+
+.timer-settings {
+    width: 12em;
 }
 
 .modal {
