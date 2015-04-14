@@ -5,7 +5,7 @@ var AppStore = require('./AppStore');
 var ModalStore = require('./ModalStore');
 
 var Clock = require('./Clock.jsx');
-var TempGraph = require('./TempGraph.jsx');
+var Chart = require('./Chart.jsx');
 var Control = require('./Control.jsx');
 var AppSettings = require('./AppSettings.jsx');
 var ModalStack = require('./ModalStack.jsx');
@@ -54,7 +54,7 @@ var Goldilocks = React.createClass({
             });
             return (
                 <tr key={chart.id}>
-                    <td colSpan="2" className="chart"><TempGraph chart={chart}/></td>
+                    <td colSpan="2" className="chart"><Chart chart={chart}/></td>
                     <td>{controls}</td>
                 </tr>
             )

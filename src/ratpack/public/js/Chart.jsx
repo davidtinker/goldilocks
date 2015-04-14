@@ -8,7 +8,7 @@ var ModalStore = require('./ModalStore');
 
 var ChartSettings = require('./ChartSettings.jsx');
 
-var TempGraph = React.createClass({
+var Chart = React.createClass({
 
     getInitialState: function() {
         return { controls: ChartHistoryStore.get(this.props.chart.id) || [] }
@@ -56,7 +56,7 @@ var TempGraph = React.createClass({
     }
 });
 
-module.exports = TempGraph;
+module.exports = Chart;
 
 var dateFn = function(d) { return d.date };
 var tempFn = function(d) { return d.temp };
