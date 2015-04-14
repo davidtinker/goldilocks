@@ -2,9 +2,12 @@ var React = require('react');
 
 var AppDispatcher = require('./AppDispatcher');
 var AppStore = require('./AppStore');
+var ModalStore = require('./ModalStore');
 
-var TitleBar = require('./TitleBar.jsx');
-var Chart = require('./Chart.jsx');
+var Clock = require('./Clock.jsx');
+var TempGraph = require('./TempGraph.jsx');
+var Control = require('./Control.jsx');
+var AppSettings = require('./AppSettings.jsx');
 var ModalStack = require('./ModalStack.jsx');
 
 var Goldilocks = React.createClass({
@@ -37,16 +40,41 @@ var Goldilocks = React.createClass({
         this.setState({width: window.width, height: window.height});
     },
 
+    onTitleClick: function(ev) {
+        ModalStore.push(<AppSettings onComplete={ModalStore.pop.bind(ModalStore)} app={this.state.app}/>);
+    },
+
     render: function() {
         if (!this.state) return (<div></div>);
-        var chartNodes = this.state.app.charts.map(function(chart){
-            return (<Chart chart={chart} key={chart.id}/>)
+        var app = this.state.app;
+
+        var charts = app.charts.map(function(chart){
+            var controls = chart.controls.map(function(control) {
+                return <Control control={control} chart={chart} key={control.id}/>
+            });
+            return (
+                <tr key={chart.id}>
+                    <td colSpan="2" className="chart"><TempGraph chart={chart}/></td>
+                    <td>{controls}</td>
+                </tr>
+            )
         });
+
         return (
             <div className="root">
-                <div className='padder'>&nbsp;</div>
-                <TitleBar app={this.state.app}/>
-                {chartNodes}
+                <table>
+                    <tbody>
+                    <tr>
+                        <td className="header clickable" onClick={this.onTitleClick}>
+                            <div className="brand">Goldilocks&deg;{app.fahrenheit ? 'F' : 'C'}</div>
+                            <div className="title">{app.title}</div>
+                        </td>
+                        <td>(timers)</td>
+                        <td><Clock time={app.updated}/></td>
+                    </tr>
+                    {charts}
+                    </tbody>
+                </table>
                 <ModalStack/>
             </div>
         )

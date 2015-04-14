@@ -10,10 +10,10 @@ import ratpack.jackson.JacksonModule
 import tinker.goldilocks.RaspberryPi
 import tinker.goldilocks.TempLogRepo
 import tinker.goldilocks.model.AppState
+import tinker.goldilocks.model.AppTimer
 import tinker.goldilocks.model.Chart
 import tinker.goldilocks.model.Control
 
-import static ratpack.groovy.Groovy.context
 import static ratpack.groovy.Groovy.groovyTemplate
 import static ratpack.groovy.Groovy.ratpack
 import static ratpack.jackson.Jackson.fromJson
@@ -49,6 +49,23 @@ ratpack {
                     context.byMethod {
                         get { render(json(app.state)) }
                         put { render(json(app.updateSettings(parse(fromJson(AppState))))) }
+                    }
+                }
+
+                post("timers") {
+                    render(json(app.addOrUpdateTimer(parse(fromJson(AppTimer)))))
+                }
+
+                handler("timers/:id") {
+                    context.byMethod {
+                        put {
+                            AppTimer timer = parse(fromJson(AppTimer))
+                            timer.id = Integer.parseInt(pathTokens['id'])
+                            render(json(app.addOrUpdateTimer(timer)))
+                        }
+                        delete {
+                            render(json(app.deleteTimer(Integer.parseInt(pathTokens['id']))))
+                        }
                     }
                 }
 

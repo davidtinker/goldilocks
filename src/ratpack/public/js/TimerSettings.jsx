@@ -13,11 +13,6 @@ var TimerSettings = React.createClass({
         if (this.props.onComplete) this.props.onComplete(true);
     },
 
-    onAddChart: function(ev) {
-        ev.preventDefault();
-        AppDispatcher.dispatch({type: 'add-chart'});
-    },
-
     onCancel: function(ev) {
         ev.preventDefault();
         if (this.props.onComplete) this.props.onComplete(false);

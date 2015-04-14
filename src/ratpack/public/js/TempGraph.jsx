@@ -4,6 +4,9 @@ var d3 = require("d3");
 var AppDispatcher = require('./AppDispatcher');
 var AppStore = require("./AppStore");
 var ChartHistoryStore = require("./ChartHistoryStore");
+var ModalStore = require('./ModalStore');
+
+var ChartSettings = require('./ChartSettings.jsx');
 
 var TempGraph = React.createClass({
 
@@ -11,13 +14,17 @@ var TempGraph = React.createClass({
         return { controls: ChartHistoryStore.get(this.props.chart.id) || [] }
     },
 
+    onChartClick: function(ev) {
+        ModalStore.push(
+            <ChartSettings chart={this.props.chart} onComplete={ModalStore.pop.bind(ModalStore)}/>
+        );
+    },
+
     render: function() {
-        return (<div className="temp-graph" onClick={this.props.onClick}></div>);
+        return (<div className="temp-graph clickable" onClick={this.onChartClick}></div>);
     },
 
     componentDidMount: function() {
-        console.log("TempGraph componentDidMount");
-
         this._changeListener = function(){
             this.setState({controls: ChartHistoryStore.get(this.props.chart.id) || []});
         }.bind(this);
@@ -41,7 +48,6 @@ var TempGraph = React.createClass({
     },
 
     componentDidUpdate: function() {
-        console.log("TempGraph componentDidUpdate");
         this.renderChart();
     },
 

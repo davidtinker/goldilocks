@@ -3,6 +3,7 @@ package tinker.goldilocks
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import tinker.goldilocks.model.AppState
+import tinker.goldilocks.model.AppTimer
 import tinker.goldilocks.model.Chart
 import tinker.goldilocks.model.Control
 
@@ -67,6 +68,27 @@ class App {
         return refreshState()
     }
 
+    synchronized AppState addOrUpdateTimer(AppTimer n) {
+        setupRepo.update { AppState s ->
+            AppTimer t = n.id ? s.findTimer(n.id) : s.addTimer()
+            if (n.name != null) t.name = n.name
+            if (n.seconds != null) {
+                t.seconds = n.seconds
+                GregorianCalendar gc = new GregorianCalendar()
+                gc.add(Calendar.SECOND, n.seconds)
+                t.expires = gc.time
+            }
+        }
+        return refreshState()
+    }
+
+    synchronized AppState deleteTimer(Integer timerId) {
+        setupRepo.update { AppState s ->
+            s.timers.remove(s.findTimer(timerId))
+        }
+        return refreshState()
+    }
+
     synchronized AppState addChart() {
         setupRepo.update { AppState s -> s.addChart() }
         return refreshState()
@@ -74,7 +96,7 @@ class App {
 
     synchronized AppState updateChart(Chart n) {
         setupRepo.update { AppState s ->
-            Chart c = s.findChart(n.id);
+            Chart c = s.findChart(n.id)
             if (n.minutes != null) c.minutes = n.minutes
         }
         return refreshState()

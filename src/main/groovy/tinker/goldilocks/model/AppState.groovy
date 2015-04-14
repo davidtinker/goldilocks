@@ -1,7 +1,6 @@
 package tinker.goldilocks.model
 
 import groovy.transform.CompileStatic
-import tinker.goldilocks.TempLogRepo
 
 /**
  * The persistent state of our application with transient fields for the dynamic state (current temp of vessels etc.).
@@ -11,20 +10,11 @@ import tinker.goldilocks.TempLogRepo
 class AppState {
 
     String title
-    List<Chart> charts = []
     Boolean fahrenheit
-    Date timerExpires
+    List<Chart> charts = []
+    List<AppTimer> timers = []
 
     transient Date updated
-
-    double fixTemp(double c) {
-        return fahrenheit ? c * 9 / 5 + 32 : c
-    }
-
-    List<TempLogRepo.Record> fixTemp(List<TempLogRepo.Record> list) {
-        if (fahrenheit) list.each { it.temp = fixTemp(it.temp) }
-        return list
-    }
 
     Chart findChart(Integer id) {
         Chart c = charts.find { it.id == id }
@@ -40,4 +30,17 @@ class AppState {
         return ans
     }
 
+    AppTimer findTimer(Integer id) {
+        AppTimer t = timers.find { it.id == id }
+        if (!t) throw new IllegalArgumentException("Timer not found for id ${id}")
+        return t
+    }
+
+    AppTimer addTimer() {
+        int max = 0
+        timers.each { if (it.id > max) max = it.id }
+        def ans = new AppTimer(id: max + 1)
+        timers << ans
+        return ans
+    }
 }

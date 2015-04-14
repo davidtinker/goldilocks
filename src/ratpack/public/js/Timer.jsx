@@ -1,19 +1,15 @@
 var React = require('react');
 var ModalStore = require('./ModalStore');
+var moment = require('moment');
 
 var TimerSettings = require('./TimerSettings.jsx');
 
 var Timer = React.createClass({
 
-    getInitialState: function() {
-        var te = this.props.timerExpires;
-        return { secondsLeft: te ? moment(te).diff(moment(), 'seconds') : null}
-    },
-
     componentDidMount: function() {
-        if (this.props.timerExpires) {
-            this._interval = setInterval(function() { this.setState(this.getInitialState()) }.bind(this), 1000);
-        }
+        //if (this.props.timerExpires) {
+        //    this._interval = setInterval(function() { this.setState(this.getInitialState()) }.bind(this), 1000);
+        //}
     },
 
     componentWillUnmount: function() {
@@ -27,13 +23,14 @@ var Timer = React.createClass({
     },
 
     render: function() {
-        if (this.state.secondsLeft == null) {
-            return <div className="timer clickable" onClick={this.onChangeSettings}>0:00:00</div>
-        } else {
+        if (this.props.timerExpires) {
+            var secs = moment(this.props.timerExpires).diff(moment(), 'seconds');
             return (
-            <div className="timer clickable" onClick={this.onChangeSettings}>
-                {moment.unix(this.state.secondsLeft).format('HH:mm:ss')}
-            </div>)
+                <div className="timer clickable" onClick={this.onChangeSettings}>
+                    {moment.unix(secs).format('HH:mm:ss')}
+                </div>)
+        } else {
+            return <div className="timer clickable" onClick={this.onChangeSettings}>0:00:00</div>
         }
     }
 });

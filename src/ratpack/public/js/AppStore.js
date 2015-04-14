@@ -57,6 +57,11 @@ AppDispatcher.register(function(action) {
         case 'delete-control':
             $.ajax({type: "DELETE", url: '/rest/app/charts/' + action.id.chartId + '/controls/' + action.id.id}).success(updateApp);
             break;
+
+        case 'start-timer':
+            $.post('/rest/app/timers?minutes' + action.data.minutes, updateApp);
+            break;
+
     }
 });
 
