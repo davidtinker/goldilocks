@@ -153,7 +153,7 @@ class App {
                     }
                 }
                 if (i.pin) jobs << {
-                    if (i.pinState == "auto") tempLogRepo.save("target-" + i.pin, i.targetTemp)
+                    tempLogRepo.save("target-" + i.pin, i.pinState == "auto" && i.targetTemp != null ? i.targetTemp : (Double)0.0)
                     try {
                         pi.setPin(i.pin, i.pinState == "on")
                     } catch (Exception x) {
