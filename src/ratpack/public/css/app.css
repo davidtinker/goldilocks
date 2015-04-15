@@ -36,6 +36,10 @@ h1 {
     font-variant: small-caps;
 }
 
+.brand-no-title {
+    font-size: 200%;
+}
+
 .title {
     font-size: 120%;
     padding-top: 0.2em;

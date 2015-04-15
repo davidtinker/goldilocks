@@ -66,10 +66,10 @@ var Goldilocks = React.createClass({
                     <tbody>
                     <tr>
                         <td className="header clickable" onClick={this.onTitleClick}>
-                            <div className="brand">Goldilocks&deg;{app.fahrenheit ? 'F' : 'C'}</div>
+                            <div className={"brand" + (app.title ? "" : " brand-no-title")}>Goldilocks&deg;{app.fahrenheit ? 'F' : 'C'}</div>
                             <div className="title">{app.title}</div>
                         </td>
-                        <td>(timers)</td>
+                        <td></td>
                         <td><Clock time={app.updated}/></td>
                     </tr>
                     {charts}
