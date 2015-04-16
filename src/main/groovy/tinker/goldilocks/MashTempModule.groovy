@@ -14,12 +14,12 @@ class MashTempModule extends AbstractModule {
         File d = new File(System.getProperty("goldilocks.data", "/var/lib/goldilocks"))
         if (!d.directory) d.mkdirs()
 
-        boolean dev = Boolean.getBoolean("dev")
+        boolean fakePi = Boolean.getBoolean("fakePi")
 
-        log.info("goldilocks.data [${d}]")
+        log.info("goldilocks.data [${d}] fakePi=${fakePi}")
         bind(Key.get(File, Names.named("data.dir"))).toInstance(d)
 
-        bind(RaspberryPi).to(dev ? FakeRaspberryPi : RaspberryPiImpl)
+        bind(RaspberryPi).to(fakePi ? FakeRaspberryPi : RaspberryPiImpl)
 
         bind(App).in(Scopes.SINGLETON)
         bind(SetupRepo).in(Scopes.SINGLETON)

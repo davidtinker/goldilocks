@@ -10,6 +10,7 @@ var PinState = require('./PinState.jsx');
 var Control = React.createClass({
 
     onChangeSettings: function(ev) {
+        ev.stopPropagation();
         ModalStore.push(
             <ControlSettings control={this.props.control} chart={this.props.chart} onComplete={ModalStore.pop.bind(ModalStore)}/>
         );
@@ -40,7 +41,9 @@ var Control = React.createClass({
                 <div onClick={this.onChangePinState} title="Click to change" className={"clickable" + (heater ? ' heater' : '')}>
                     {ps != 'auto' ?
                         <div className='pin'>
-                            <label>{heater ? 'Heater' : i.name}</label>
+                            <label title="Click to configure" className="clickable" onClick={this.onChangeSettings}>
+                                {heater ? 'Heater' : i.name}
+                            </label>
                             <span className={"value " + ps}>{psl}</span>
                         </div>
                         : ''}

@@ -26,8 +26,7 @@ class RaspberryPiImpl implements RaspberryPi {
         i = s.indexOf('t=', i + 1)
         if (i < 0) throw new IOException("Expected 't=' from ${f}: [${s}]")
         try {
-            int t = Integer.parseInt(s.substring(i + 2, i + 7))
-            return t / 1000.0
+            return Integer.parseInt(s.substring(i + 2, i + 7)) / 1000.0
         } catch (Exception ignore) {
             throw new IOException("Error reading temp from ${f}: [${s}]")
         }

@@ -26,7 +26,7 @@ dependencies {
 }
 
 run {
-//    jvmArgs "-Ddev=true"
+    jvmArgs "-DfakePi=true"
 //    debug true
 }
 
