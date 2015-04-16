@@ -26,6 +26,7 @@ dependencies {
 }
 
 run {
+//    jvmArgs "-Ddev=true"
 //    debug true
 }
 
