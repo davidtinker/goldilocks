@@ -59,7 +59,7 @@ var Chart = React.createClass({
 module.exports = Chart;
 
 var dateFn = function(d) { return d.date };
-var tempFn = function(d) { return d.temp };
+var tempFn = function(d) { return d.temp == 0 ? null : d.temp };
 
 function widestExtent(lines, fn) {
     var e = d3.extent(lines[0].data, fn);
@@ -71,6 +71,16 @@ function widestExtent(lines, fn) {
     return e;
 }
 
+function updateTempExtent(current, data) {
+    var e = d3.extent(data, tempFn);
+    if (e[0] != null) {
+        if (!current) return e;
+        if (e[0] < current[0]) current[0] = e[0];
+        if (e[1] > current[1]) current[1] = e[1];
+    }
+    return current;
+}
+
 function createChart(el, props, data) {
     d3.select(el).selectAll("svg").remove();
     if (!data) return;
@@ -79,14 +89,22 @@ function createChart(el, props, data) {
 
     // flatten the line(s) for each control into a array of just lines + do c to f conversion if needed
     var lines = [], i, j, c;
+    var tempExtent;
     for (i = 0; i < data.length; i++) {
         c = data[i];
         if (c.tempProbe && c.tempProbe.length > 0) {
+            tempExtent = updateTempExtent(tempExtent, c.tempProbe);
             lines.push({type: 'tempProbe', color: c.color, data: fixTemp(c.tempProbe, fahrenheit) });
         }
         if (c.targetTemp && c.targetTemp.length > 0) {
+            tempExtent = updateTempExtent(tempExtent, c.targetTemp);
             lines.push({type: 'targetTemp', color: c.color + "-alt", data: fixTemp(c.targetTemp, fahrenheit) })
         }
+    }
+    if (!tempExtent) tempExtent = [67, 67];
+    if (fahrenheit) {
+        tempExtent[0] = ctof(tempExtent[0]);
+        tempExtent[1] = ctof(tempExtent[1]);
     }
 
     var margin = {top: 10, right: 0, bottom: 40, left: 60},
@@ -112,14 +130,11 @@ function createChart(el, props, data) {
 
     var mins = props.chart.minutes || 60;
 
-    var e = lines.length > 0 ? widestExtent(lines, dateFn) : [0, new Date().time];
+    e = lines.length > 0 ? widestExtent(lines, dateFn) : [0, new Date().time];
     if (!e[0] || e[1] - e[0] < mins * 60 * 1000) e[0] = e[1] - mins * 60 * 1000;
     x.domain(e);
 
-    e = lines.length > 0 ? widestExtent(lines, tempFn) : [67, 67];
-    e[0] = Math.floor(e[0] - 2);
-    e[1] = Math.floor(e[1] + 2 + 0.5);
-    y.domain(e);
+    y.domain(tempExtent);
 
     var xfn = function(d) { return x(d.date) };
     var yfn = function(d) { return y(d.temp) };
@@ -164,12 +179,27 @@ function createChart(el, props, data) {
     }
 }
 
+function ctof(c) {
+    return c * 9 / 5 + 32
+}
+
 function fixTemp(a, fahrenheit) {
     if (!fahrenheit) return a;
     var ans = [];
     for (var i = 0; i < a.length; i++) {
         var e = a[i];
-        ans.push({date: e.date, temp: e.temp * 9 / 5 + 32})
+        ans.push({date: e.date, temp: ctof(e.temp)})
     }
     return ans;
 }
+
+function removeZero(a, fahrenheit) {
+    var zero = fahrenheit ? 32.0 : 0.0;
+    var ans = [];
+    for (var i = 0; i < a.length; i++) {
+        var e = a[i];
+        if (e.temp != zero) ans.push(e);
+    }
+    return ans;
+}
+
