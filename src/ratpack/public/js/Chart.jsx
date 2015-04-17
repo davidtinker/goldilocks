@@ -102,6 +102,7 @@ function createChart(el, props, data) {
         }
     }
     if (!tempExtent) tempExtent = [67, 67];
+
     if (fahrenheit) {
         tempExtent[0] = ctof(tempExtent[0]);
         tempExtent[1] = ctof(tempExtent[1]);
@@ -134,6 +135,8 @@ function createChart(el, props, data) {
     if (!e[0] || e[1] - e[0] < mins * 60 * 1000) e[0] = e[1] - mins * 60 * 1000;
     x.domain(e);
 
+    tempExtent[0] = Math.floor(tempExtent[0] - 2);
+    tempExtent[1] = Math.floor(tempExtent[1] + 2 + 0.5);
     y.domain(tempExtent);
 
     var xfn = function(d) { return x(d.date) };
