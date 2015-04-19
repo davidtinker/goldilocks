@@ -79,6 +79,10 @@ h1 {
     width: 16em;
 }
 
+.pid-params input {
+    width: 5em;
+}
+
 .pin-state {
     width: 16em;
 }
@@ -199,35 +203,39 @@ text {
     text-align: center;
 }
 
-form {
+.form {
     position: relative;
 }
 
-form > label {
+.form > label {
     display: table-row;
 }
 
-form > label span:first-child {
+.form > label span:first-child {
     display: table-cell;
     text-align: right;
     padding: 0.5em 0.4em 0.5em 0;
 }
 
-form > label > input,
-form > label > button {
+.form > label > input,
+.form > label > button {
     display: table-cell;
 }
 
-form .radio-group label {
+.form .radio-group label {
     padding-right: 0.5em;
 }
 
-form .actions {
+.form .actions {
     padding-top: 1em;
 }
 
-form .actions a {
+.form .actions a {
     margin-left: 1em;
+}
+
+input[type='number'] {
+    width: 5em;
 }
 
 a.btn {

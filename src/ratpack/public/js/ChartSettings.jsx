@@ -41,7 +41,7 @@ var ChartSettings = React.createClass({
     render: function() {
         var c = this.props.chart;
         return (
-            <form className="app-settings" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
+            <form className="form app-settings" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
                 <h1>Chart Settings</h1>
                 <label>
                     <span>Time Span</span>

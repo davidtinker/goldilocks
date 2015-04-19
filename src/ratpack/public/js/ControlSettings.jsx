@@ -67,7 +67,7 @@ var ControlSettings = React.createClass({
             return (<option value={p} key={p}>{p || 'None'}</option>)
         });
         return (
-            <form className="control-settings" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
+            <form className="form control-settings" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
                 <h1>Control Settings</h1>
                 <label>
                     <span>Name</span>
@@ -87,6 +87,18 @@ var ControlSettings = React.createClass({
                         <option value='blue'>Blue</option>
                         <option value='orange'>Orange</option>
                     </select>
+                </label>
+                <label>
+                    <span>Kc</span>
+                    <input type="number" ref='kc' defaultValue={c.kc}/>
+                </label>
+                <label>
+                    <span>Ti</span>
+                    <input type="number" ref='ti' defaultValue={c.ti}/>
+                </label>
+                <label>
+                    <span>Td</span>
+                    <input type="number" ref='td' defaultValue={c.td}/>
                 </label>
                 <div className='actions'>
                     <input type='submit' value='Save'/>

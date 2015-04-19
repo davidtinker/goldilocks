@@ -27,7 +27,7 @@ var TimerSettings = React.createClass({
         for (var i = 1; i < 60; i++) ops.push(<option value={i}>{i}</option>)
         for (; i <= 120; i += 5) ops.push(<option value={i}>{i}</option>)
         return (
-            <form className="timer-settings" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
+            <form className="form timer-settings" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
                 <h1>Timer</h1>
                 <label>
                     <span>Minutes</span>

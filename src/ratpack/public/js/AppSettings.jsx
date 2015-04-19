@@ -32,7 +32,7 @@ var AppSettings = React.createClass({
 
     render: function() {
         return (
-            <form className="app-settings" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
+            <form className="form app-settings" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
                 <h1>Settings</h1>
                 <label>
                     <span>Title</span>

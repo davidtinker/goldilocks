@@ -43,7 +43,7 @@ var PinState = React.createClass({
         var pv = c.pinState == 'auto' ? 'auto' : !c.pinState || c.pinState == 'off' ? 'on' : 'off';
 
         return (
-            <form className="pin-state" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
+            <form className="form pin-state" onSubmit={this.onSubmit} onKeyDown={this.onKeyDown}>
                 <h1>{heater ? (c.name ? c.name + ' ' : '') + 'Heater' : (c.name ? c.name : 'Output Pin')}</h1>
                 <RadioGroup ref='pin' name='pin' value={pv} options={ops}/>
                 {heater ?
