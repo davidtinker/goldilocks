@@ -27,12 +27,13 @@ class App {
     private final RaspberryPi pi
 
     private volatile AppState state
+    private Map<String, PidTempController> pids = new HashMap<>()
 
     private ScheduledExecutorService pool = Executors.newScheduledThreadPool(8)
 
     private Runnable updateTask = {
         try {
-            refreshState()
+            updateState()
         } catch (Exception x) {
             log.error(x.toString(), x)
         }
@@ -153,11 +154,21 @@ class App {
                     }
                 }
                 if (i.pin) jobs << {
-                    tempLogRepo.save("target-" + i.pin, i.pinState == "auto" && i.targetTemp != null ? i.targetTemp : (Double)0.0)
+                    if (i.tempProbe) {
+                        tempLogRepo.save("target-" + i.pin, i.pinState == "auto" && i.targetTemp != null ? i.targetTemp : (Double)0.0)
+                    }
+                    if (i.pinState != "auto") {
+                        try {
+                            pi.setPin(i.pin, i.pinState == "on")
+                        } catch (Exception x) {
+                            i.errors << "Unable to set pin ${i.pin} to ${i.pinState}: " + x
+                            log.error(x.toString(), x)
+                        }
+                    }
                     try {
-                        pi.setPin(i.pin, i.pinState == "on")
+                        i.pinOn = pi.getPin(i.pin)
                     } catch (Exception x) {
-                        i.errors << "Unable to set heater pin ${i.pin} to ${i.pinState}: " + x
+                        i.errors << "Unable to read pin ${i.pin}: " + x
                         log.error(x.toString(), x)
                     }
                 }
@@ -168,5 +179,24 @@ class App {
         if (jobs) pool.invokeAll(jobs)
         state.updated = new Date()
         return this.state = state
+    }
+
+    private synchronized void updateState() {
+        def state = refreshState()
+        Map<String, PidTempController> newPids = new HashMap<>()
+        state.charts.each { c ->
+            c.controls.each { i ->
+                if (i.tempProbe && i.pin && i.pinState == "auto" && i.targetTemp) {
+                    String key = "${c.id} ${i.id} ${i.kc} ${i.ti} ${i.td}"
+                    def pid = pids.get(key)
+                    if (!pid) pid = new PidTempController(i.kc, i.ti, i.id, 10.0)
+                    newPids.put(key, pid)
+                    double yk = pid.update(i.temp, i.targetTemp)
+                    log.debug("yk " + yk)
+                    pi.setPin(i.pin, yk >= 50.0)
+                }
+            }
+        }
+        pids = newPids
     }
 }

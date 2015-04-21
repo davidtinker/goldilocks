@@ -19,7 +19,7 @@ class MashTempModule extends AbstractModule {
         log.info("goldilocks.data [${d}] fakePi=${fakePi}")
         bind(Key.get(File, Names.named("data.dir"))).toInstance(d)
 
-        bind(RaspberryPi).to(fakePi ? FakeRaspberryPi : RaspberryPiImpl)
+        bind(RaspberryPi).to(fakePi ? FakeRaspberryPi : RaspberryPiImpl).in(Scopes.SINGLETON)
 
         bind(App).in(Scopes.SINGLETON)
         bind(SetupRepo).in(Scopes.SINGLETON)

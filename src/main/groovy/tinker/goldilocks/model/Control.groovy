@@ -19,13 +19,15 @@ class Control {
     Double targetTemp
     String pinState       // off, auto, on
 
-    // PID control parameters
+    // PID control parameters for when pinState == "auto"
     double kc   // Controller gain
     double ti   // Time-constant for I action
     double td   // Time-constant for D action
 
-    transient Double temp
-    transient List<String> errors
+    // current values
+    Double temp
+    Boolean pinOn
+    List<String> errors
 
     boolean empty() { !name && !tempProbe && !pin }
 }

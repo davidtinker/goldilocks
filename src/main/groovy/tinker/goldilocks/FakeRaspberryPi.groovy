@@ -14,17 +14,21 @@ class FakeRaspberryPi implements RaspberryPi {
     private static final String MASH_PROBE = "28-00000657cbe6"
     private static final String HEATER_PIN = "GPIO_17"
 
-    private double hltTemp = 60.0
+    private double hltTemp = 22.0
     private double mashTemp = 67.5
     private boolean heaterOn
 
+    private long heaterChangeTime
+
     private Timer timer
+
+    private static final double INTERVAL_SECS = 10.0
 
     FakeRaspberryPi() {
         timer = new Timer("fake-pi", true)
         timer.schedule(new TimerTask() {
             void run() { updateState() }
-        }, 1000, 30000)
+        }, 1000, (long)(INTERVAL_SECS * 1000))
     }
 
     @PreDestroy
@@ -49,7 +53,10 @@ class FakeRaspberryPi implements RaspberryPi {
 
     @Override
     void setPin(String pinId, boolean on) throws IOException {
-        if (pinId == HEATER_PIN) heaterOn = on
+        if (pinId == HEATER_PIN && heaterOn != on) {
+            heaterOn = on
+            heaterChangeTime = System.currentTimeMillis()
+        }
     }
 
     @Override
@@ -59,8 +66,24 @@ class FakeRaspberryPi implements RaspberryPi {
     }
 
     private void updateState() {
-        if (heaterOn) hltTemp += Math.random() * 2
-        else hltTemp -= Math.random() / 2
+        // this tries to produce a 'ramp up' and 'taper off' i.e. it takes a little time before the temperature
+        // starts rising after the heater is turned on and a little time to stop rising when it is turned off
+        int secs = (int)((System.currentTimeMillis() - heaterChangeTime) / 1000)
+        double degreesPerMin
+        if (heaterOn) {
+            if (secs > 120) secs = 120
+            degreesPerMin = secs / 120.0
+        } else {
+            if (secs > 180) secs = 180
+            degreesPerMin = (90 - secs) / 90.0
+        }
+        degreesPerMin *= 0.95 + Math.random() / 10.0
+
+        hltTemp += (degreesPerMin / 60.0) * INTERVAL_SECS
+
+        if (hltTemp < 22.0) hltTemp = 22.0 + Math.random() / 5
+        else if (hltTemp > 100.0) hltTemp = 99.90 + Math.random() / 5
+
         mashTemp += Math.random() - 0.5
     }
 }

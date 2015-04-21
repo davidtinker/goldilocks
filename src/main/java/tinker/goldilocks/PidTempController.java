@@ -19,8 +19,8 @@ public class PidTempController {
      * The LPF parameters are also initialised here: lpf[k] = lpf1 * lpf[k-1] + lpf2 * lpf[k-2]
      *
      * @param kc Controller gain
-     * @param ti Time-constant for I action
-     * @param td Time-constant for D action
+     * @param ti Time-constant for I action (secs)
+     * @param td Time-constant for D action (secs)
      * @param ts Sample time [sec.]
      */
     public PidTempController(double kc, double ti, double td, double ts) {
