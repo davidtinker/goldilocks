@@ -2,6 +2,7 @@ var React = require('react');
 
 var AppDispatcher = require('./AppDispatcher');
 var PiStore = require('./PiStore');
+var TempGain = require('./TempGain.jsx');
 
 var ControlSettings = React.createClass({
 
@@ -30,7 +31,10 @@ var ControlSettings = React.createClass({
                 name: this.refs.name.getDOMNode().value.trim(),
                 tempProbe: this.refs.tempProbe.getDOMNode().value.trim(),
                 pin: this.refs.pin.getDOMNode().value.trim(),
-                color: this.refs.color.getDOMNode().value.trim()
+                color: this.refs.color.getDOMNode().value.trim(),
+                gainPerMin: this.refs.gainPerMin.value,
+                lagTimeSecs: this.refs.lagTimeSecs.getDOMNode().value.trim(),
+                autoTune: this.refs.autoTune.getDOMNode().checked
             }
         });
         if (this.props.onComplete) this.props.onComplete(true);
@@ -89,16 +93,19 @@ var ControlSettings = React.createClass({
                     </select>
                 </label>
                 <label>
-                    <span>Kc</span>
-                    <input type="number" ref='kc' defaultValue={c.kc}/>
+                    <span>Heater Gain</span>
+                    <TempGain ref='gainPerMin' value={c.gainPerMin} units=" / min"/>
                 </label>
                 <label>
-                    <span>Ti</span>
-                    <input type="number" ref='ti' defaultValue={c.ti}/>
+                    <span>Heater Lag</span>
+                    <span className="field">
+                        <input type="number" ref='lagTimeSecs' defaultValue={c.lagTimeSecs}/>
+                        <span> secs</span>
+                    </span>
                 </label>
-                <label>
-                    <span>Td</span>
-                    <input type="number" ref='td' defaultValue={c.td}/>
+                <label className="checkbox">
+                    <span>Auto Tune</span>
+                    <input ref='autoTune' type='checkbox' defaultChecked={c.autoTune}/>
                 </label>
                 <div className='actions'>
                     <input type='submit' value='Save'/>

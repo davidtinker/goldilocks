@@ -95,7 +95,7 @@ ratpack {
                         put {
                             def control = parse(fromJson(Control))
                             control.id = pathTokens['id']
-                            render(json(app.updateControl(control)))
+                            render(json(app.updateControls([control])))
                         }
                         delete {
                             render(json(app.deleteControl(pathTokens['id'])))

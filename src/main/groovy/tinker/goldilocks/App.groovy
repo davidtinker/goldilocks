@@ -122,17 +122,20 @@ class App {
         return refreshState()
     }
 
-    synchronized AppState updateControl(Control n) {
+    synchronized AppState updateControls(List<Control> list) {
         setupRepo.update { AppState s ->
-            Control c = s.findControl(n.id);
-            if (n.name) c.name = n.name
-            if (n.tempProbe != null) c.tempProbe = n.tempProbe ?: null
-            if (n.pin != null) c.pin = n.pin ?: null
-            if (n.color != null) c.color = n.color ?: null
-            if (n.targetTemp) c.targetTemp = n.targetTemp as Double
-            if (n.pinState) c.pinState = n.pinState
-            if (n.gainPerMin != null) c.gainPerMin = n.gainPerMin
-            if (n.lagTimeSecs != null) c.lagTimeSecs = n.lagTimeSecs
+            list.each { n ->
+                Control c = s.findControl(n.id);
+                if (n.name) c.name = n.name
+                if (n.tempProbe != null) c.tempProbe = n.tempProbe ?: null
+                if (n.pin != null) c.pin = n.pin ?: null
+                if (n.color != null) c.color = n.color ?: null
+                if (n.targetTemp) c.targetTemp = n.targetTemp as Double
+                if (n.pinState) c.pinState = n.pinState
+                if (n.gainPerMin != null) c.gainPerMin = n.gainPerMin
+                if (n.lagTimeSecs != null) c.lagTimeSecs = n.lagTimeSecs
+                if (n.autoTune != null) c.autoTune = n.autoTune
+            }
         }
         return refreshState()
     }
@@ -194,22 +197,31 @@ class App {
         if (!state) return
 
         Map<String, TempController> newTCs = new HashMap<>()
+        List<Control> changed = []
         state.charts.each { c ->
             c.controls.each { i ->
                 if (i.tempProbe && i.pin && i.temp != null && i.pinOn != null) {
-                    String key = "${c.id} ${i.id}"
-                    def tc = tempControllers.get(key)
+                    def tc = tempControllers.get(i.id)
                     if (!tc) tc = new TempController()
                     tc.gainPerMin = i.gainPerMin ?: (double)0.7
                     tc.lagTimeSecs = i.lagTimeSecs ?: 120
                     tc.autoTune = i.autoTune == null || i.autoTune
-                    newTCs.put(key, tc)
+                    newTCs.put(i.id, tc)
 
                     boolean heaterOn = tc.tick(i.temp, i.pinOn, i.targetTemp)
                     if (i.pinState == "auto" && i.targetTemp) pi.setPin(i.pin, heaterOn)
+
+                    if (tc.gainPerMin != i.gainPerMin || tc.lagTimeSecs != i.lagTimeSecs) {
+                        i.gainPerMin = tc.gainPerMin
+                        i.lagTimeSecs = tc.lagTimeSecs
+                        changed << new Control(id: i.id, gainPerMin: tc.gainPerMin, lagTimeSecs: tc.lagTimeSecs)
+                    }
                 }
             }
         }
         tempControllers = newTCs
+
+        // this might take a little while and we don't want to miss temp controller ticks so do it in the background
+        if (changed) pool.submit({ updateControls(changed) })
     }
 }

@@ -223,6 +223,7 @@ text {
 }
 
 .form > label > input,
+.form > label > .input,
 .form > label > button {
     display: table-cell;
 }
@@ -239,6 +240,7 @@ text {
     margin-left: 1em;
 }
 
+.temp-input > input,
 input[type='number'] {
     width: 5em;
 }
