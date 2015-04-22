@@ -29,6 +29,7 @@ h1 {
 
 .header {
     padding-left: 2em;
+    padding-bottom: 0.75em;
 }
 
 .brand {
@@ -73,6 +74,10 @@ h1 {
 .control {
     padding: 0.2em;
     margin-bottom: 2em;
+}
+
+.control-new {
+    text-align: center;
 }
 
 .control-settings {
@@ -176,7 +181,7 @@ form.heater {
 
 text {
     fill: #bbbfc2;
-    font-size: 140%;
+    font-size: 120%;
 }
 
 .axis path,

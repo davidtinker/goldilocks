@@ -27,17 +27,9 @@ class App {
     private final RaspberryPi pi
 
     private volatile AppState state
-    private Map<String, PidTempController> pids = new HashMap<>()
+    private Map<String, TempController> tempControllers = new HashMap<>()
 
     private ScheduledExecutorService pool = Executors.newScheduledThreadPool(8)
-
-    private Runnable updateTask = {
-        try {
-            updateState()
-        } catch (Exception x) {
-            log.error(x.toString(), x)
-        }
-    }
 
     @Inject
     App(SetupRepo setupRepo, TempLogRepo tempLogRepo, RaspberryPi pi) {
@@ -45,7 +37,22 @@ class App {
         this.tempLogRepo = tempLogRepo
         this.pi = pi
         state = setupRepo.load()
-        pool.scheduleAtFixedRate(updateTask, 0, 10, TimeUnit.SECONDS)
+
+        pool.scheduleAtFixedRate({
+            try {
+                refreshState()
+            } catch (Exception x) {
+                log.error(x.toString(), x)
+            }
+        }, 0, 10, TimeUnit.SECONDS)
+
+        pool.scheduleAtFixedRate({
+            try {
+                updateTempControllers()
+            } catch (Exception x) {
+                log.error(x.toString(), x)
+            }
+        }, 0, 11, TimeUnit.SECONDS)
     }
 
     @PreDestroy
@@ -124,11 +131,13 @@ class App {
             if (n.color != null) c.color = n.color ?: null
             if (n.targetTemp) c.targetTemp = n.targetTemp as Double
             if (n.pinState) c.pinState = n.pinState
+            if (n.gainPerMin != null) c.gainPerMin = n.gainPerMin
+            if (n.lagTimeSecs != null) c.lagTimeSecs = n.lagTimeSecs
         }
         return refreshState()
     }
 
-    synchronized AppState deleteControl(Integer chartId, Integer controlId) {
+    synchronized AppState deleteControl(Integer chartId, String controlId) {
         setupRepo.update { AppState s ->
             def c = s.findChart(chartId)
             def i = c.findControl(controlId)
@@ -181,22 +190,27 @@ class App {
         return this.state = state
     }
 
-    private synchronized void updateState() {
-        def state = refreshState()
-        Map<String, PidTempController> newPids = new HashMap<>()
+    private void updateTempControllers() {
+        def state = this.state
+        if (!state) return
+
+        Map<String, TempController> newTCs = new HashMap<>()
         state.charts.each { c ->
             c.controls.each { i ->
-                if (i.tempProbe && i.pin && i.pinState == "auto" && i.targetTemp) {
-                    String key = "${c.id} ${i.id} ${i.kc} ${i.ti} ${i.td}"
-                    def pid = pids.get(key)
-                    if (!pid) pid = new PidTempController(i.kc, i.ti, i.id, 10.0)
-                    newPids.put(key, pid)
-                    double yk = pid.update(i.temp, i.targetTemp)
-                    log.debug("yk " + yk)
-                    pi.setPin(i.pin, yk >= 50.0)
+                if (i.tempProbe && i.pin && i.temp != null && i.pinOn != null) {
+                    String key = "${c.id} ${i.id}"
+                    def tc = tempControllers.get(key)
+                    if (!tc) tc = new TempController()
+                    tc.gainPerMin = i.gainPerMin ?: (double)0.7
+                    tc.lagTimeSecs = i.lagTimeSecs ?: 120
+                    tc.autoTune = i.autoTune == null || i.autoTune
+                    newTCs.put(key, tc)
+
+                    boolean heaterOn = tc.tick(i.temp, i.pinOn, i.targetTemp)
+                    if (i.pinState == "auto" && i.targetTemp) pi.setPin(i.pin, heaterOn)
                 }
             }
         }
-        pids = newPids
+        tempControllers = newTCs
     }
 }

@@ -54,9 +54,9 @@ var Control = React.createClass({
             );
         }
         return (
-            <div className="control">
+            <div className="control control-new">
                 {!i.tempProbe && !i.pin
-                    ? <div className='clickable' onClick={this.onChangeSettings}>Click to setup control</div>
+                    ? <div className='clickable' onClick={this.onChangeSettings}>Click to<br/>configure<br/>control</div>
                     : ''}
                 {tp}
                 {tf}

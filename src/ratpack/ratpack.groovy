@@ -98,8 +98,7 @@ ratpack {
                             render(json(app.updateControl(Integer.parseInt(pathTokens['cid']), control)))
                         }
                         delete {
-                            render(json(app.deleteControl(Integer.parseInt(pathTokens['cid']),
-                                    Integer.parseInt(pathTokens['id']))))
+                            render(json(app.deleteControl(Integer.parseInt(pathTokens['cid']), pathTokens['id'])))
                         }
                     }
                 }

@@ -6,7 +6,7 @@ package tinker.goldilocks.model
  */
 class Control {
 
-    int id
+    String id
     String name
 
     String tempProbe
@@ -19,10 +19,10 @@ class Control {
     Double targetTemp
     String pinState       // off, auto, on
 
-    // PID control parameters for when pinState == "auto"
-    double kc   // Controller gain
-    double ti   // Time-constant for I action
-    double td   // Time-constant for D action
+    // temp control tuning parameters for when pinState == "auto"
+    Double gainPerMin
+    Integer lagTimeSecs
+    Boolean autoTune
 
     // current values
     Double temp
