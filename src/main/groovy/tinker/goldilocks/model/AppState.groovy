@@ -30,6 +30,14 @@ class AppState {
         return ans
     }
 
+    Control findControl(String id) {
+        for (Chart c : charts) {
+            Control i = c.controls.find { it.id == id }
+            if (i) return i
+        }
+        throw new IllegalArgumentException("Control not found for id ${id}")
+    }
+
     AppTimer findTimer(Integer id) {
         AppTimer t = timers.find { it.id == id }
         if (!t) throw new IllegalArgumentException("Timer not found for id ${id}")

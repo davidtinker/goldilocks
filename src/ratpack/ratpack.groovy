@@ -94,11 +94,11 @@ ratpack {
                     context.byMethod {
                         put {
                             def control = parse(fromJson(Control))
-                            control.id = Integer.parseInt(pathTokens['id'])
-                            render(json(app.updateControl(Integer.parseInt(pathTokens['cid']), control)))
+                            control.id = pathTokens['id']
+                            render(json(app.updateControl(control)))
                         }
                         delete {
-                            render(json(app.deleteControl(Integer.parseInt(pathTokens['cid']), pathTokens['id'])))
+                            render(json(app.deleteControl(pathTokens['id'])))
                         }
                     }
                 }

@@ -122,9 +122,9 @@ class App {
         return refreshState()
     }
 
-    synchronized AppState updateControl(Integer chartId, Control n) {
+    synchronized AppState updateControl(Control n) {
         setupRepo.update { AppState s ->
-            Control c = s.findChart(chartId).findControl(n.id);
+            Control c = s.findControl(n.id);
             if (n.name) c.name = n.name
             if (n.tempProbe != null) c.tempProbe = n.tempProbe ?: null
             if (n.pin != null) c.pin = n.pin ?: null
@@ -137,12 +137,11 @@ class App {
         return refreshState()
     }
 
-    synchronized AppState deleteControl(Integer chartId, String controlId) {
+    synchronized AppState deleteControl(String controlId) {
         setupRepo.update { AppState s ->
-            def c = s.findChart(chartId)
-            def i = c.findControl(controlId)
+            def i = s.findControl(controlId)
             if (i.pin) pi.setPin(i.pin, false)
-            c.controls.remove(i)
+            s.charts.each { it.controls.remove(i) }
         }
         return refreshState()
     }
