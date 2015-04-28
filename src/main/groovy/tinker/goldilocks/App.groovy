@@ -208,7 +208,7 @@ class App {
                     tc.autoTune = i.autoTune == null || i.autoTune
                     newTCs.put(i.id, tc)
 
-                    boolean heaterOn = tc.tick(i.temp, i.pinOn, i.targetTemp)
+                    boolean heaterOn = i.temp != null ? tc.tick(i.temp, i.pinOn ?: false, i.targetTemp ?: (double)0.0) : false
                     if (i.pinState == "auto" && i.targetTemp) pi.setPin(i.pin, heaterOn)
 
                     if (tc.gainPerMin != i.gainPerMin || tc.lagTimeSecs != i.lagTimeSecs) {

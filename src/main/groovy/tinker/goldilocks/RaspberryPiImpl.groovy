@@ -1,18 +1,43 @@
 package tinker.goldilocks
 
+import com.pi4j.io.gpio.Pin
+import com.pi4j.io.gpio.RaspiPin
+import com.pi4j.wiringpi.Gpio
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
+
+import java.lang.reflect.Modifier
+
 /**
  * Uses pi4j library.
  */
+@CompileStatic
+@Slf4j
 class RaspberryPiImpl implements RaspberryPi {
 
+    static {
+        def rc = Gpio.wiringPiSetupGpio()
+        if (rc) throw new IOException("Gpio.wiringPiSetupGpio() failed with code " + rc)
+    }
+
     private static final File TEMP_PROBE_DIR = new File("/sys/bus/w1/devices")
+
+    private final Map<String, Pin> pins
+
+    RaspberryPiImpl() {
+        Map<String, Pin> m = [:]
+        RaspiPin.fields.findAll {
+            f -> Modifier.isStatic(f.modifiers) && f.name.startsWith("GPIO_") && Pin.class.isAssignableFrom(f.type)
+        }.sort { it.name }.each { m.put(it.name, (Pin)it.get(null)) }
+        this.pins = m
+    }
 
     @Override
     List<String> getTempProbes() throws IOException {
         if (!TEMP_PROBE_DIR.isDirectory()) return []
         return TEMP_PROBE_DIR.list(new FilenameFilter() {
             boolean accept(File dir, String name) { return !name.startsWith("w1_") }
-        });
+        }) as List;
     }
 
     @Override
@@ -34,16 +59,25 @@ class RaspberryPiImpl implements RaspberryPi {
 
     @Override
     List<String> getPins() throws IOException {
-        return (0..20).collect { "GPIO_" + String.format("%02d", it) }
+        return pins.keySet().asList()
     }
 
     @Override
     void setPin(String pinId, boolean on) throws IOException {
-
+        Pin p = lookupPin(pinId)
+        Gpio.pinMode(p.address, Gpio.OUTPUT)
+        Gpio.digitalWrite(p.address, on)
+        log.debug("setPin ${pinId} ${on} address ${p.address}")
     }
 
     @Override
     boolean getPin(String pinId) throws IOException {
-        return false
+        return Gpio.digitalRead(lookupPin(pinId).address)
+    }
+
+    private Pin lookupPin(String pinId) {
+        Pin p = pins[pinId]
+        if (!p) throw new IllegalArgumentException("Invalid pinId [${pinId}]")
+        return p
     }
 }
