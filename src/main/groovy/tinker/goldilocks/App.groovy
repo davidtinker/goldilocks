@@ -52,7 +52,7 @@ class App {
             } catch (Exception x) {
                 log.error(x.toString(), x)
             }
-        }, 0, 11, TimeUnit.SECONDS)
+        }, 0, 1, TimeUnit.SECONDS)
     }
 
     @PreDestroy
@@ -133,7 +133,7 @@ class App {
                 if (n.targetTemp) c.targetTemp = n.targetTemp as Double
                 if (n.pinState) c.pinState = n.pinState
                 if (n.gainPerMin != null) c.gainPerMin = n.gainPerMin
-                if (n.lagTimeSecs != null) c.lagTimeSecs = n.lagTimeSecs
+                if (n.lagPeriodSecs != null) c.lagPeriodSecs = n.lagPeriodSecs
                 if (n.autoTune != null) c.autoTune = n.autoTune
             }
         }
@@ -204,17 +204,17 @@ class App {
                     def tc = tempControllers.get(i.id)
                     if (!tc) tc = new TempController()
                     tc.gainPerMin = i.gainPerMin ?: (double)0.7
-                    tc.lagTimeSecs = i.lagTimeSecs ?: 120
+                    tc.lagPeriodSecs = i.lagPeriodSecs ?: 120
                     tc.autoTune = i.autoTune == null || i.autoTune
                     newTCs.put(i.id, tc)
 
-                    boolean heaterOn = i.temp != null ? tc.tick(i.temp, i.pinOn ?: false, i.targetTemp ?: (double)0.0) : false
+                    boolean heaterOn = tc.tick(i.temp, i.pinOn ?: false, i.pinState == "auto" ? i.targetTemp : null)
                     if (i.pinState == "auto" && i.targetTemp) pi.setPin(i.pin, heaterOn)
 
-                    if (tc.gainPerMin != i.gainPerMin || tc.lagTimeSecs != i.lagTimeSecs) {
+                    if (tc.gainPerMin != i.gainPerMin || tc.lagPeriodSecs != i.lagPeriodSecs) {
                         i.gainPerMin = tc.gainPerMin
-                        i.lagTimeSecs = tc.lagTimeSecs
-                        changed << new Control(id: i.id, gainPerMin: tc.gainPerMin, lagTimeSecs: tc.lagTimeSecs)
+                        i.lagPeriodSecs = tc.lagPeriodSecs
+                        changed << new Control(id: i.id, gainPerMin: tc.gainPerMin, lagPeriodSecs: tc.lagPeriodSecs)
                     }
                 }
             }

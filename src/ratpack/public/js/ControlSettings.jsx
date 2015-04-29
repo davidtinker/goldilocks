@@ -99,7 +99,7 @@ var ControlSettings = React.createClass({
                 <label>
                     <span>Heater Lag</span>
                     <span className="field">
-                        <input type="number" ref='lagTimeSecs' defaultValue={c.lagTimeSecs}/>
+                        <input type="number" ref='lagPeriodSecs' defaultValue={c.lagPeriodSecs}/>
                         <span> secs</span>
                     </span>
                 </label>

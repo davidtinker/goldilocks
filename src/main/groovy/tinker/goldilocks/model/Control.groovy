@@ -21,7 +21,7 @@ class Control {
 
     // temp control tuning parameters for when pinState == "auto"
     Double gainPerMin
-    Integer lagTimeSecs
+    Integer lagPeriodSecs
     Boolean autoTune
 
     // current values
