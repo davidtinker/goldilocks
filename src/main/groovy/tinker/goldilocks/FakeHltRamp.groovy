@@ -1,10 +1,13 @@
 package tinker.goldilocks
 
+import groovy.util.logging.Slf4j
+
 /**
  * Simulates the temperature response of a hot liquor tank with heating element. There is a lag after the heater is
  * turned on before the temperature starts rising at full speed and a similar lag after the heater is turned off
  * before the temperature starts falling.
  */
+@Slf4j
 class FakeHltRamp {
 
     private final int lagSecs
@@ -42,12 +45,14 @@ class FakeHltRamp {
         int secs = (ticks - heaterChangeTime) * secondsPerTick
         double degreesPerMin
         if (heaterOn) {
-            if (secs > 120) secs = 120
-            degreesPerMin = secs / 120.0
+            if (secs > lagSecs) secs = lagSecs
+            degreesPerMin = (double)secs / lagSecs
         } else {
-            if (secs > 180) secs = 180
-            degreesPerMin = (90 - secs) / 90.0
+            if (secs > overshootSecs * 2) secs = overshootSecs * 2
+            degreesPerMin = (double)(overshootSecs - secs) / overshootSecs
         }
+
+        log.debug("degreesPerMin " + degreesPerMin)
 
         temp += (degreesPerMin / 60.0) * secondsPerTick
 

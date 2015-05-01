@@ -16,7 +16,7 @@ class FakeRaspberryPi implements RaspberryPi {
 
     private static final int INTERVAL_SECS = 5
 
-    private FakeHltRamp hlt = new FakeHltRamp(22.0, 120, 180, INTERVAL_SECS)
+    private FakeHltRamp hlt = new FakeHltRamp(22.0, 120, 120, INTERVAL_SECS)
     private double mashTemp = 67.5
 
     private Timer timer
