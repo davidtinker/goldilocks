@@ -7,6 +7,10 @@ var Clock = React.createClass({
         return { time: moment(this.props.time) }
     },
 
+    componentWillReceiveProps: function(nextProps) {
+        this.setState({ time: moment(nextProps.time) })
+    },
+
     componentDidMount: function() {
         this._interval = setInterval(function() {
             this.setState({time: this.state.time.clone().add(1, 'seconds')});
