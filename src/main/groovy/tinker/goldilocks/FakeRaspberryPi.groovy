@@ -5,7 +5,7 @@ import groovy.util.logging.Slf4j
 import javax.annotation.PreDestroy
 
 /**
- * Simulates a Pi for testing on PC.
+ * Simulates a Pi for development and testing on PC.
  */
 @Slf4j
 class FakeRaspberryPi implements RaspberryPi {
@@ -14,18 +14,18 @@ class FakeRaspberryPi implements RaspberryPi {
     private static final String MASH_PROBE = "28-00000657cbe6"
     private static final String HEATER_PIN = "GPIO_17"
 
-    private FakeHltRamp hlt = new FakeHltRamp(22.0, 120, 180, 10)
+    private static final int INTERVAL_SECS = 5
+
+    private FakeHltRamp hlt = new FakeHltRamp(22.0, 120, 180, INTERVAL_SECS)
     private double mashTemp = 67.5
 
     private Timer timer
-
-    private static final double INTERVAL_SECS = 10.0
 
     FakeRaspberryPi() {
         timer = new Timer("fake-pi", true)
         timer.schedule(new TimerTask() {
             void run() { updateState() }
-        }, 1000, (long)(INTERVAL_SECS * 1000))
+        }, 1000, INTERVAL_SECS * 1000)
     }
 
     @PreDestroy

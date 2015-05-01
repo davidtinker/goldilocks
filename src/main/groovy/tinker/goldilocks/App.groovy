@@ -44,7 +44,7 @@ class App {
             } catch (Exception x) {
                 log.error(x.toString(), x)
             }
-        }, 0, 10, TimeUnit.SECONDS)
+        }, 0, 5, TimeUnit.SECONDS)
 
         pool.scheduleAtFixedRate({
             try {
