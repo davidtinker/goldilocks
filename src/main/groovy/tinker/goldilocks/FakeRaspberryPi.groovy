@@ -38,9 +38,13 @@ class FakeRaspberryPi implements RaspberryPi {
     }
 
     double readTemp(String probeId) throws IOException {
-        if (probeId == HLT_PROBE) return hlt.temp
-        if (probeId == MASH_PROBE) return mashTemp
+        if (probeId == HLT_PROBE) return digitize(hlt.temp)
+        if (probeId == MASH_PROBE) return digitize(mashTemp)
         throw new FileNotFoundException(probeId)
+    }
+
+    private double digitize(double v) {
+        return Math.floor(v * 16) / 16
     }
 
     @Override
@@ -61,6 +65,6 @@ class FakeRaspberryPi implements RaspberryPi {
 
     private void updateState() {
         hlt.tick()
-        mashTemp += Math.random() - 0.5
+        mashTemp += (Math.random() - 0.5) / 10
     }
 }

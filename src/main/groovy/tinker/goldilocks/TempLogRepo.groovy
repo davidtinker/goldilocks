@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat
 class TempLogRepo {
 
     private final File dataDir
+    private final Map<String, Record> lastTemp = new HashMap<>()
+    private final Map<String, Record> lastTemp2 = new HashMap<>()
 
     private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyyMMdd")
     private static final SimpleDateFormat TIME_FMT = new SimpleDateFormat("HH:mm:ss") // must change list() as well
@@ -50,7 +52,29 @@ class TempLogRepo {
     synchronized void save(String traceId, double temp) throws IOException {
         Date now = new Date()
         File f = new File(ensureDir(traceId), DATE_FMT.format(now) + ".csv")
-        f.append(TIME_FMT.format(now) + "," + TEMP_FMT.format(temp) + "\n", "UTF8")
+
+        def last = lastTemp[traceId]
+        def last2 = lastTemp2[traceId]
+
+        def line = (TIME_FMT.format(now) + "," + TEMP_FMT.format(temp) + "\n").getBytes("UTF8")
+
+        // overwrite the last reading if it is the same as the one before that and not more than a minute old
+        if (last && last2 && last.temp == temp && last2.temp == temp && (now.time - last.date < 60000l)
+                && f.length() >= line.length * 2) {
+            RandomAccessFile o
+            try {
+                o = new RandomAccessFile(f, "rw")
+                o.seek(o.length() - line.length)
+                o.write(line)
+            } finally {
+                if (o) try { o.close() } catch (IOException ignore) { }
+            }
+        } else {
+            f.append(line)
+        }
+
+        lastTemp.put(traceId, new Record(now.time, temp))
+        if (last) lastTemp2.put(traceId, last)
     }
 
     /**

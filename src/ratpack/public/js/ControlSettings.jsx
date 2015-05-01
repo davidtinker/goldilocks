@@ -33,7 +33,7 @@ var ControlSettings = React.createClass({
                 pin: this.refs.pin.getDOMNode().value.trim(),
                 color: this.refs.color.getDOMNode().value.trim(),
                 gainPerMin: this.refs.gainPerMin.value,
-                lagTimeSecs: this.refs.lagTimeSecs.getDOMNode().value.trim(),
+                lagPeriodSecs: this.refs.lagPeriodSecs.getDOMNode().value.trim(),
                 autoTune: this.refs.autoTune.getDOMNode().checked
             }
         });
