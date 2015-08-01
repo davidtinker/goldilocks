@@ -80,8 +80,8 @@ class TempController {
 
         double pp = pendingTempIncrease
 
-        // re-calc gain if lag is over and temp has risen by 10 degrees since end of lag
-        if (auto && heaterOn && lagEndTime >= heaterOnTime && (measuredTemp - lagEndTemp) >= 10.0) {
+        // re-calc gain if lag is over and temp has risen by 4 degrees since end of lag
+        if (auto && heaterOn && lagEndTime >= heaterOnTime && (measuredTemp - lagEndTemp) >= 4.0) {
             double g = (measuredTemp - lagEndTemp) / (ticks - lagEndTime)
             g = Math.floor(g * 60.0 * 100.0) / 100.0
             if (g != gainPerMin) {

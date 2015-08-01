@@ -32,9 +32,9 @@ var ControlSettings = React.createClass({
                 tempProbe: this.refs.tempProbe.getDOMNode().value.trim(),
                 pin: this.refs.pin.getDOMNode().value.trim(),
                 color: this.refs.color.getDOMNode().value.trim(),
-                gainPerMin: this.refs.gainPerMin.value,
-                lagPeriodSecs: this.refs.lagPeriodSecs.getDOMNode().value.trim(),
-                autoTune: this.refs.autoTune.getDOMNode().checked
+                //gainPerMin: this.refs.gainPerMin.value,
+                //lagPeriodSecs: this.refs.lagPeriodSecs.getDOMNode().value.trim(),
+                autoTune: true
             }
         });
         if (this.props.onComplete) this.props.onComplete(true);
@@ -92,21 +92,6 @@ var ControlSettings = React.createClass({
                         <option value='orange'>Orange</option>
                     </select>
                 </label>
-                <label>
-                    <span>Heater Gain</span>
-                    <TempGain ref='gainPerMin' value={c.gainPerMin} units=" / min"/>
-                </label>
-                <label>
-                    <span>Heater Lag</span>
-                    <span className="field">
-                        <input type="number" ref='lagPeriodSecs' defaultValue={c.lagPeriodSecs}/>
-                        <span> secs</span>
-                    </span>
-                </label>
-                <label className="checkbox">
-                    <span>Auto Tune</span>
-                    <input ref='autoTune' type='checkbox' defaultChecked={c.autoTune}/>
-                </label>
                 <div className='actions'>
                     <input type='submit' value='Save'/>
                     <a key='cancel' className="btn cancel" onClick={this.onCancel}>Cancel</a>
@@ -118,3 +103,18 @@ var ControlSettings = React.createClass({
 });
 
 module.exports = ControlSettings;
+
+/*
+ <label>
+ <span>Heater Gain</span>
+ <TempGain ref='gainPerMin' value={c.gainPerMin} units=" / min"/>
+ </label>
+ <label>
+ <span>Heater Lag</span>
+ <span className="field">
+ <input type="number" ref='lagPeriodSecs' defaultValue={c.lagPeriodSecs}/>
+ <span> secs</span>
+ </span>
+ </label>
+
+ */
