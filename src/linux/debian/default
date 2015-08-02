@@ -1,0 +1,2 @@
+GOLDILOCKS_LOG=/var/log/goldilocks.log
+GOLDILOCKS_PIDFILE=/var/run/goldilocks.pid

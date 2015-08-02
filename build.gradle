@@ -8,6 +8,8 @@ buildscript {
     }
 }
 
+version = '1.0.0'
+
 apply plugin: "io.ratpack.ratpack-groovy"
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: "idea"
@@ -40,3 +42,52 @@ task buildUI(type:Exec) {
 }
 
 tasks.shadowJar.dependsOn(buildUI)
+
+shadowJar {
+    exclude 'LICENSE*'
+    exclude 'NOTICE*'
+    exclude 'overview*'
+    exclude 'README*'
+    exclude 'public/node_modules'
+}
+
+// create .deb package - needs fpm installed (gem install fpm)
+task deb(dependsOn: 'distTar') << {
+    delete {
+        file 'build/debian'
+    }
+    copy {
+        from file('build/libs/goldilocks-all.jar')
+        into 'build/debian/var/lib/goldilocks/'
+    }
+    copy {
+        from file("src/linux/dist")
+        into 'build/debian/var/lib/goldilocks/'
+    }
+    copy {
+        from file("src/linux/debian")
+        into 'build/debian/etc/init.d/'
+        include('init.sh')
+        rename ('init.sh', 'goldilocks')
+    }
+    copy {
+        from file("src/linux/debian/default")
+        into 'build/debian/etc/default'
+        rename ('default', 'goldilocks')
+    }
+
+    def fpm = ("fpm -s dir -t deb -n goldilocks -v ${version} -a noarch " +
+            "--config-files /etc/default/goldilocks " +
+            "--after-install src/linux/debian/postinst " +
+            "--before-remove src/linux/debian/prerm " +
+            "--deb-user root --deb-group root " +
+            "-f -p build/distributions/goldilocks-${version}.deb " +
+            "-C build/debian/")
+            .split(" ") as List
+    fpm << "--license" << "GPL V3"
+    fpm << "--description" << "Raspberry Pi based temperature logging and control for home brewing"
+    fpm << "."
+    exec {
+        commandLine fpm
+    }
+}

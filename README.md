@@ -2,14 +2,24 @@
 
 Raspberry Pi based temperature logging and/or control software for home brewing. Reads 1-wire DS18B20 temperature
 probes and optionally enables/disables heating element(s) using output pin(s). The user interface is web based and
-mobile-friendly so you can monitor and control your brewing over Wifi using a phone or tablet.
+mobile-friendly so you can monitor and control your brewing over Wifi using a phone or tablet. The temperature
+control algorithm automatically tunes itself.
 
 ## Installation
 
 I am using Raspbian installed via NOOBS on my Pi but Goldilocks should run on anything with Java 8 installed. For
-Debian based systems (e.g. Raspbian) try the following instructions:
+Debian based systems (e.g. Raspbian) try the following instructions.
 
+First install [Pi4j](http://pi4j.com/install.html). This is very simple:
 
+    $ curl -s get.pi4j.com | sudo bash
+    
+If you aren't happy running a random script from the internet on your Pi or have issues please refer to the Pi4j
+site. Now download and install Goldilocks:
+
+    $ sudo bash
+    # wget
+    # dpkg -i goldilocks-
 
 Browse to http://10.0.0.103:5050/ (replace 10.0.0.103 with the IP address of your Pi) and you should see the 
 Goldilocks UI.
@@ -72,11 +82,20 @@ run the server locally create /var/lib/goldilocks and give your user write acces
     $ gradle run
     
 This starts the server with the -DfakePi=true switch for development on your Mac or Linux machine. The 'fake' Pi has
-a couple of temperature probes attached and the heater pin is GPIO_17. Browse to [http://127.0.0.1:5050/] to see it 
+a couple of temperature probes attached and the heater pin is GPIO_17. Browse to http://127.0.0.1:5050/ to see it 
 in action.
+
+## Packaging
+
+You can build a fat jar and run that directly:
+
+    $ gradle shadowJar
+    $ java -DfakePi=true -jar build/libs/goldilocks-*.jar 
+
+To build the .dev package:
+
+    $ gradle deb
 
 ## License
 
 GNU General Public License (GPL) version 3.0
-
-[http://www.gnu.org/licenses/gpl-3.0.en.html]
