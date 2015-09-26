@@ -67,7 +67,6 @@ class RaspberryPiImpl implements RaspberryPi {
         Pin p = lookupPin(pinId)
         Gpio.pinMode(p.address, Gpio.OUTPUT)
         Gpio.digitalWrite(p.address, on)
-        log.debug("setPin ${pinId} ${on} address ${p.address}")
     }
 
     @Override
