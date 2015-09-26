@@ -13,3 +13,4 @@ fi
 PID=`cat $GOLDILOCKS_PIDFILE`
 echo "Killing ${PID}"
 kill $PID
+exit 0

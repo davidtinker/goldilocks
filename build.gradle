@@ -52,13 +52,14 @@ shadowJar {
 }
 
 // create .deb package - needs fpm installed (gem install fpm)
-task deb(dependsOn: 'distTar') << {
+task deb(dependsOn: 'shadowJar') << {
     delete {
         file 'build/debian'
     }
     copy {
-        from file('build/libs/goldilocks-all.jar')
-        into 'build/debian/var/lib/goldilocks/'
+        from file("build/libs/goldilocks-${version}-all.jar")
+        into 'build/debian/var/lib/goldilocks'
+        rename ("goldilocks-${version}-all.jar", 'goldilocks.jar')
     }
     copy {
         from file("src/linux/dist")

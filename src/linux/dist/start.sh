@@ -9,7 +9,7 @@ GOLDILOCKS_PIDFILE=goldilocks.pid
 set -e
 
 cd /var/lib/goldilocks
-nohup java -jar goldilocks-all.jar >> $GOLDILOCKS_LOG 2>&1 &
+nohup java -jar goldilocks.jar >> $GOLDILOCKS_LOG 2>&1 &
 PID=$!
 
 echo $PID > $GOLDILOCKS_PIDFILE
