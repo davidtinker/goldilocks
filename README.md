@@ -5,7 +5,7 @@ probes and optionally enables/disables heating element(s) using output pin(s). T
 mobile-friendly so you can monitor and control your brewing over Wifi using a phone or tablet. The temperature
 control algorithm automatically tunes itself.
 
-![Screenshot](raw/master/docs/img/goldilocks_screenshot.png?raw=true)
+![Screenshot](docs/img/goldilocks_screenshot.png?raw=true)
 
 ## Installation
 
