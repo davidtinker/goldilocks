@@ -30,7 +30,7 @@ Goldilocks is known to work with the following hardware:
 
   - [Raspberry Pi Model B](https://www.raspberrypi.org/) tiny Linux computer
   - [DS18B20 1-wire temperature probes](http://www.communica.co.za/Catalog/Details/P3426552881)
-  - A heating element attached to one of the output pins of the Pi, usually via a solid state relay
+  - A heating element attached to one of the output pins of the Pi, via a solid state relay
 
 There are lots of guides online on how to get these working:
 
@@ -51,7 +51,16 @@ The temperature probes listed in the drop down are discovered by listing /sys/bu
 empty then likely your probe(s) are not being picked up by the Pi (check your wiring etc.).
 
 You can re-configure controls by clicking the name next to the chart. If the control has an output then click the 
-"OFF/ON" label to turn the output on or off and to enter a target temperature for automatic temperature control.  
+"OFF/ON" label to turn the output on or off and to enter a target temperature for automatic temperature control. 
+
+### Warning
+
+This is a piece of software and will definitely have bugs. Use this software at your own risk. Controlling heating
+elements with software is a dangerous business. Some safety hints:
+
+  - Don't leave your heater element connected to your solid state relay if there isn't water in your HLT
+  - Don't leave your brewery alone while the water in the HLT is heating up
+  - Don't leave your brewery alone if your heater element is connected to the system
 
 ## Building
 
