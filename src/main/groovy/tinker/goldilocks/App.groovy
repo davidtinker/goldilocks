@@ -151,11 +151,10 @@ class App {
 
     private synchronized AppState refreshState() throws IOException {
         def state = setupRepo.load()
-        List<Callable> jobs = []
         state.charts.each { c ->
             c.controls.each { i ->
                 i.errors = []
-                if (i.tempProbe) jobs << {
+                if (i.tempProbe) {
                     try {
                         i.temp = pi.readTemp(i.tempProbe)
                         tempLogRepo.save(i.tempProbe, i.temp)
@@ -164,7 +163,7 @@ class App {
                         log.error(x.toString(), x)
                     }
                 }
-                if (i.pin) jobs << {
+                if (i.pin) {
                     if (i.tempProbe) {
                         tempLogRepo.save("target-" + i.pin, i.pinState == "auto" && i.targetTemp != null ? i.targetTemp : (Double)0.0)
                     }
@@ -186,8 +185,6 @@ class App {
             }
 
         }
-
-        if (jobs) pool.invokeAll(jobs)
         state.updated = new Date()
         return this.state = state
     }
