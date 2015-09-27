@@ -20,11 +20,18 @@ If you aren't happy running a random script from the internet on your Pi or have
 site. Now download and install Goldilocks:
 
     $ sudo bash
-    # wget
-    # dpkg -i goldilocks-
+    # wget https://github.com/davidtinker/goldilocks/releases/download/v1.0.0-beta/goldilocks-1.0.0.deb
+    # dpkg -i goldilocks-1.0.0.deb
 
 Browse to http://10.0.0.103:5050/ (replace 10.0.0.103 with the IP address of your Pi) and you should see the 
-Goldilocks UI.
+Goldilocks UI. It might take a little while to come up.
+
+### Upgrading
+
+Uninstall goldilocks and then re-install use a newer .deb file:
+
+    $ sudo bash
+    # dpkg -r goldilocks
 
 ### Hardware
 
