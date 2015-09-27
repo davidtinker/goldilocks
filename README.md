@@ -5,6 +5,8 @@ probes and optionally enables/disables heating element(s) using output pin(s). T
 mobile-friendly so you can monitor and control your brewing over Wifi using a phone or tablet. The temperature
 control algorithm automatically tunes itself.
 
+![Screenshot](raw/master/docs/img/goldilocks_screenshot.png?raw=true)
+
 ## Installation
 
 I am using Raspbian installed via NOOBS on my Pi but Goldilocks should run on anything with Java 8 installed. For
